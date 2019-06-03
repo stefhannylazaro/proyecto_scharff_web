@@ -1,0 +1,28 @@
+envio_regular
+  origen_calle
+  origen_departamento
+  origen_provincia
+  origen_distrito
+  origen_interior
+  origen_referencia
+  origen_nombre_remitente
+  origen_celular
+
+  destino_calle
+  destino_departamento
+  destino_provincia
+  destino_distrito
+  destino_interior
+  destino_referencia
+  destino_nombre_remitente
+  destino_celular
+
+
+  ancho
+  altura
+  profundidad
+  personas
+  tiempo
+  costo_total
+  cupon_descuento
+  tarjeta_id

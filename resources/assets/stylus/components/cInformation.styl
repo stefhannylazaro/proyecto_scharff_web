@@ -1,0 +1,432 @@
+.wrapper-cover
+  position relative
+
+.circle-cover
+  width 30px
+
+.container-left
+  font-family Carnas-Extra-Light
+  flex-direction column
+  // align-items center
+  div.d-flex
+    flex-direction column
+    span
+      font-size 1.5rem
+
+@media screen and (max-width: 600px)
+  .container-left div.d-flex
+    padding-right: 30px!important;
+    padding-left: 30px!important;
+
+.btn-active.cover, .cover
+  color inherit
+  .btn__content
+    text-transform initial
+
+
+.cover-col
+  display flex
+  align-items center
+  justify-content center
+  transition all
+  .two
+    img
+      width 100%
+
+.container-arrow
+  position absolute
+  bottom 5px
+  width 100%
+  i
+    display flex
+    justify-content center
+    cursor pointer
+
+.title-font-bold
+  font-family Carnas-Bold
+  font-size 1.9rem
+  // text-align right
+
+.text-litle
+  font-family Carnas-Regular
+  font-size 1rem
+
+.btn-align-rigth
+  display flex
+  justify-content: flex-end
+
+.btn-sucursales.btn.btn--outline
+  &:first-child
+    background:c-text-title-pink!important
+    border-color: c-text-title-pink
+    .btn__content
+      color: #fff
+
+@media screen and (max-width: 600px)
+  .title-font-bold, .text-litle,.title-font-regular
+    text-align center
+
+  .btn-align-rigth
+    justify-content: center
+  .order-one
+    order 1
+
+  .img-zoom
+    order 2
+    overflow hidden
+    margin-top 2.5rem
+    img
+      // transform scale(1.5,1.5)
+  .border-left-md:after
+    height: 0!important
+
+.card-service
+  display flex
+  flex-direction column
+  align-items center
+
+.border-left-md:after
+  content ''
+  border-left solid .1rem rgba(0, 0, 0, 0.2);
+  position absolute
+  align-self center
+  height 23rem
+  left 50%
+
+.text-box
+  min-height 4rem
+
+.controls
+  display flex
+  justify-content space-between
+  position absolute
+  top 50%
+  width 100%
+
+.circle
+  display flex
+  border-radius 50%
+  border solid .2rem rgba(0, 0, 0, 0.2);
+  cursor pointer
+
+
+.title-font-regular
+  font-family Carnas-Medium
+  font-size 1.7rem
+
+.container-left-stop
+  background c-principal-ligth
+
+.login-error-alert
+  font-size .9rem
+  color red
+
+.wrapper-title-center
+  display flex
+  flex-direction column
+  align-items center
+
+.flex-items
+  display flex
+  justify-content center
+  .f-item
+    width 11rem
+    &:hover
+      background-color c-principal
+  .f-imagen
+    height: 6rem
+
+.VueCarousel.slider-container
+  .VueCarousel-wrapper
+    .VueCarousel-inner
+      .VueCarousel-slide
+        justify-content center
+
+.g-wrapper
+  display flex
+  flex-flow row wrap
+  justify-content flex-start
+
+.g-sucursales
+  min-width 11rem
+
+@media screen and (min-width: 945px)
+  .g-sucursales
+    min-width 12.4rem
+    padding-left 2rem
+
+// @media screen and (max-width: 375px)
+//   .widthTen
+//     width 23rem!important
+
+// .widthTen
+//   width 30rem!important
+
+
+
+.g-sub-text
+  font-size .8rem
+
+.g-pais
+  position relative
+  &:after
+    content ''
+    width calc(100% - 11rem)
+    background c-principal
+    position absolute
+    top 9px
+    height .1rem
+
+.g-input-no-borders
+  input,textarea
+    border none!important
+    margin-bottom .8rem!important
+
+.g-form-grow
+  h3
+    font-size: 2rem;
+    font-weight: 500;
+  p
+    font-size 1.6rem
+
+.c-login-modal
+  .c-items-list
+    background none
+    border .1rem solid
+    border-radius 0
+    padding .5rem 1rem
+    min-height 2.5rem
+    .list-item
+      left 0
+      top 2.4rem
+
+.max-w960
+  max-width 960px
+
+.cover-height
+  // height calc(100vh - 82px)
+  // align-items flex-end
+  display flex
+  justify-content center
+
+.hVh
+  height calc(100vh - 79px)
+
+.set-fullscreen
+  height 100vh
+  display flex
+  justify-content center
+  align-items center
+
+.back-modal
+  background rgba(0, 0, 0, 0.3);
+  position fixed
+  width 100%
+  height 100vh
+  z-index 2
+
+
+
+
+.icon-position-center
+  position absolute
+  bottom 2rem
+  color inherit
+  left 50%
+  animation slidein 2s cubic-bezier(0.42, 0.91, 0.76, 1.1) infinite
+
+@keyframes slidein
+  0%
+    // font-size 2.5rem
+    bottom 1rem
+    // transform rotate(20deg)
+  50%
+    // font-size 3.5rem
+    bottom 2rem
+    // transform rotate(0deg)
+  100%
+    // font-size 2.5rem
+    bottom 1rem
+
+
+
+.dots-bottom
+  display flex
+  justify-content center
+  position absolute
+  bottom 5rem
+  left 20%
+
+.bg-locate-us
+  background-image url('/images/bg-map-locate.jpg')
+  background-size cover
+  padding: 11rem 0
+
+.locate-first
+  h3
+    font-size 1.9rem
+  p
+    font-size 1.3rem
+
+.btn-sucursales
+  .btn__content
+    font-size 12px
+    line-height 12px
+  &.btn-sucursales--peru
+    .btn__content
+      padding: 0 24px;
+
+.activeSucursal
+  color c-btn-active
+
+.align-text-right
+  display flex
+  text-align left
+
+.future-br
+  width: 10px;
+  display: inline-block;
+
+@media screen and (max-width: 639px)
+  .future-br
+    display block
+
+.container-chain
+  .chain-card
+    cursor pointer
+    display flex
+    flex-direction column
+    text-align center
+    align-items center
+    justify-content space-around
+    padding: 29px 29px !important;
+    width:25%
+    svg
+      fill c-text!important
+      .st0
+        fill white!important
+      .st1
+        fill c-text!important
+
+    .chain-text
+      width 8rem
+      height 2.7rem
+      padding-top .5rem
+
+    &:hover
+      svg
+        fill c-btn-active!important
+        .st1
+          fill c-btn-active!important
+      .chain-text
+        color c-btn-active!important
+
+
+.my-3
+  margin-top: 40px!important
+  margin-bottom: 50px!important
+
+.gi-1
+  padding: 10px 0 17px
+
+.bg-smoke+.pb-5.xs12
+  background:#fbfbfb
+  .VueCarousel-slide
+    position:relative
+
+.bg-smoke
+  background:#f6f6f6
+
+.gi-11
+  display: block;
+  position: absolute;
+  height: 328px;
+  top: 17px;
+  width: 0;
+  border-right: 1px solid #c3c3c3;
+  left: 0;
+
+.gi-17 p
+  padding: 0 100px
+
+.gi-17 .title-font-bold
+  margin-bottom: 16px;
+
+#formGrow select
+  border:none
+  background: #252525;
+  margin-bottom: 0.8rem;
+.gi-2
+  text-align:left
+
+.gi-2>label
+  margin-bottom: 18px;
+  display: block;
+.gi-3
+  clear:both
+  margin-bottom: 17px;
+  overflow: hidden;
+  input
+    position: absolute;
+    top: 3px;
+  label
+    padding-left: 20px;
+    display: block;
+.gi-3>div
+  float:left
+  width:33.3333%
+  text-align:left
+  position:relative
+  padding-bottom: 10px;
+  &:nth-child(3n+1)
+    clear:left
+
+.container-chain
+  display flex
+  flex-flow row wrap
+  max-width 56rem
+
+@media screen and (max-width: 639px)
+  .container-chain
+    justify-content center
+    padding: 0 20px
+    .chain-card
+      width: 50%;
+  .bg-company-information
+    background-color: #000
+    padding: 0 20px
+  .gi-17 p
+    padding: 0 30px
+  .gi-3>div
+    float: left
+    width: 50%
+  .gi-3>div:nth-child(3n+1)
+    clear: none
+  .gi-3>div:nth-child(2n+1)
+    clear: left
+  .gi-2
+    text-align: left
+    width: 100%
+
+.VueCarousel-navigation
+  display none!important
+
+.icon-prueba
+  fill red
+
+.container-chain>div
+  &:nth-child(1),&:nth-child(3),&:nth-child(6),&:nth-child(8)
+    background #fbfbfb!important
+
+
+@media screen and (max-width: 639px)
+  .container-chain>div
+    background: transparent!important
+    &:nth-child(2),&:nth-child(3),&:nth-child(6),&:nth-child(7)
+      background #fbfbfb!important
+    &:nth-child(1),&:nth-child(8)
+      background: transparent!important
+
+.chain-card
+  svg
+    width 112px

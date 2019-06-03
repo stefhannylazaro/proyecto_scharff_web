@@ -1,0 +1,998 @@
+<template>
+  <v-layout row flex wrap>
+    <v-toolbar class="elevation-0 menu-wrapper pt-4" :style="{'border-top': borderActual}" :class="component_class">
+      <a class="container-logo">
+        <img v-if="retinax2" @click="backToHome" :class="{'w10hidden': !logoSec}" :src="logoScharffx2.url" class="retina-logox2" alt="Logotipo scharff">
+        <img v-else :src="logoScharffx1.url" @click="backToHome" class="retina-logox1" alt="Logotipo scharff">
+        <span class="scharff-text-title" :style="styleObjectLine" v-show="logoSec" v-html="subtitle"></span>
+      </a>
+      <v-spacer></v-spacer>
+
+      <v-toolbar-side-icon @click.stop="drawer = !drawer" class="hidden-md-and-up"></v-toolbar-side-icon>
+
+      <v-toolbar-items class="hidden-sm-and-down" :class="{'activekey':(activekey==0||activekey==1)}">
+        <v-btn class="btn-menu"
+          v-for="(el, i) in linksMenu"
+          :class="[{active: isActive == el.name},{'parentOp':itemactive && activekey==i},{'parentOp-dom':stateChangeParent==i}]" flat
+          :key="i" @mouseover="openMenu(el, i)"  @click="showSubMenu(el, i)">
+          <span class="pa-3" v-if="el.name == 'TRACKING ONLINE'">{{el.name}}</span>
+          <span v-else>{{el.name}}</span>
+          <i v-if="el.isFather">
+            <svg style="fill: #464646;" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="24" height="24" viewBox="0 0 24 24"><path d="M7,10L12,15L17,10H7Z" /></svg>
+          </i>
+        </v-btn>
+        <div class="align-center">
+          <v-btn v-if="sesionIniciada" round color="bg-black-light"  class="cover btn-reg-menu btn-reg-menu-accede white--text elevation-0 d-align-center"  @click.native="gotoAdmin">
+              <img class="a-user-img" :src="user.img" alt="">
+              <div class="">
+                Hola
+                <span class="a-user-name">{{user.name}}</span>
+              </div>
+              <img class="a-user-next" src="/images/icon_next.png" alt="">
+
+          </v-btn>
+          <div class="" v-else>
+            <v-btn round outline class="elevation-0 btn-login-menu"  @click="showOpenLogin">
+               INICIA SESIÓN
+            </v-btn>
+            <v-btn round color="bg-pink"  class="cover btn-reg-menu white--text elevation-0" @click.native="$store.commit('setStateRegister', true);$store.commit('setStateHeaderFixed', false)">REGÍSTRATE</v-btn>
+          </div>
+        </div>
+
+      </v-toolbar-items>
+    </v-toolbar>
+    <v-slide-y-transition>
+    <div class="sub-menu-principal" v-if="itemactive" transition="slide-y-reverse-transition">
+      <div class="items-menu white py-4">
+        <div class="item-menu px1" v-for="(el, i) in subMenu" :key="i" @click="gotoPage(el.url)">
+          <div v-if="el.alt == 'fedex'"  class="item-router-link ">
+            <span class="item-menu-icon-w">
+              <span class="item-menu-icon-w" v-html="el.iconraw"></span>
+            </span>
+            <span v-if="el.isUrl" v-html="el.name"></span>
+          </div>
+          <div v-else class="item-router-link">
+            <span class="item-menu-icon-w" v-html="el.iconraw"></span>
+            <span v-if="el.isUrl" v-html="el.name"></span>
+          </div>
+        </div>
+        <div class="item-menu px1 menu--cotizador bg-smoke submenu--border" @click="openLogin = true;itemactive=false">
+          <span class="item-menu-icon-w"><img :src="cotizadorIcon.url" alt=""></span>
+          <span v-if="subMenu.length==3">
+            Solicita tu envío <strong>aquí</strong>
+            <!-- Estima cuanto te <br>cuesta hacer un <br>envío <strong>aquí</strong> -->
+          </span>
+          <span v-else>Solicita tu cotización <strong>aquí</strong></span>
+
+        </div>
+      </div>
+      <div class="menu-back" :style="{ height: htmlHeight + 'px' }" @mouseover="closeItem"></div>
+    </div>
+    </v-slide-y-transition>
+    <div v-if="drawer" class="back-modal">dark</div>
+    <v-navigation-drawer
+      fixed
+      disable-route-watcher
+      v-model="drawer"
+      class="white drawer-menu">
+      <v-card class="elevation-0">
+        <v-toolbar flat>
+          <v-list>
+            <v-list-tile @click="drawer=false">
+              <v-list-tile-title class="title">
+                <v-icon>chevron_left</v-icon>
+              </v-list-tile-title>
+            </v-list-tile>
+          </v-list>
+        </v-toolbar>
+        <v-list>
+          <v-list-group v-for="(item, i) in linksMenu" v-bind:key="i">
+            <v-list-tile slot="item" @click="">
+              <v-list-tile-content class="drawer-title">
+                <v-list-tile-title v-if="item.name == 'TRACKING ONLINE'" @click="showSubMenu(item, i)" v-html="item.name">
+
+                </v-list-tile-title>
+                <v-list-tile-title v-else-if="item.url == 'lab'" @click="gotoPage('lab')" v-html="item.name">
+
+                </v-list-tile-title>
+                <v-list-tile-title v-else v-html="item.name">
+
+                </v-list-tile-title>
+              </v-list-tile-content>
+              <v-list-tile-action v-if="item.isFather">
+                <v-icon>keyboard_arrow_down</v-icon>
+              </v-list-tile-action>
+            </v-list-tile>
+            <v-list-tile v-for="subItem in item.items" v-bind:key="subItem.name">
+              <v-list-tile-content v-if="subItem.isUrl">
+                <!-- <v-list-tile-title>{{ subItem.name }}</v-list-tile-title> -->
+                <div class="responsive-item"  @click="gotoPage(subItem.url)" v-html="subItem.name"></div>
+              </v-list-tile-content>
+            </v-list-tile>
+          </v-list-group>
+          <div class="mt-3 row d-flex layout column wrap justify-center">
+
+            <v-btn v-if="!sesionIniciada" round outline class="cover btn-login-menu" @click="showOpenLogin">INICIA SESIÓN</v-btn>
+            <v-btn v-if="!sesionIniciada" round outline class="cover btn-login-menu" @click.native="$store.commit('setStateRegister', true);drawer=false;$store.commit('setStateHeaderFixed', false)">REGISTRATE</v-btn>
+            <v-btn v-if="sesionIniciada" round outline class="cover btn-login-menu" @click.native="gotoAdmin();drawer=false">Panel de usuario</v-btn>
+
+
+
+            <!-- <v-btn class="xs12 elevation-0 grey lighten-4"  @click.native.stop="closeDraweL('Login')">{{btnEntrar.name}}</v-btn>
+            <v-btn class="xs12 elevation-0 btn-active btn" @click.native.stop="closeDraweL('DR')">{{btnCreate.name}}</v-btn> -->
+          </div>
+        </v-list>
+      </v-card>
+    </v-navigation-drawer>
+     <v-navigation-drawer
+      :temporary="!modalTerminos"
+      v-model="openRegister"
+      dark
+      absolute
+      right
+      width="350"
+      class="drawer-menu create-user">
+
+      <register-user
+        :referencia="referencia"
+        v-on:register_success="$store.commit('setStateRegister', false);openLogin=true"
+        v-on:open_terminos="open_terminos"
+      ></register-user>
+    </v-navigation-drawer>
+
+
+
+    <v-dialog
+      v-model="trackingOnline"
+      v-if="trackingOnline"
+      fullscreen
+      transition="dialog-bottom-transition">
+      <div class="modal-open-login">
+        <tracking-online
+          v-if="trackingOnline"
+          v-on:closeTrackingModal="closeTracking"
+          v-on:remAccount="remAccount"
+          :regular_codetracking="regular_codetracking"
+        ></tracking-online>
+        <div class="back-modal-active" @click.stop="closeTracking()">_</div>
+      </div>
+    </v-dialog>
+
+    <v-dialog
+      v-model="openLogin"
+      v-if="openLogin"
+      fullscreen
+      transition="dialog-bottom-transition">
+      <div class="modal-open-login"  id="modal-open-login">
+        <login-user
+          v-if="openLogin"
+          v-on:closeLoginActive="closeLogin"
+          v-on:closeLoginModal="closeLoginModal"
+          v-on:remAccount="remAccount"
+          :sesionIniciada="sesionIniciada"
+          :nombreUsuario="nombreUsuario"
+          >
+        </login-user>
+        <div class="back-modal-active" style="position:fixed;" @click.stop="closeLoginModal()">_</div>
+      </div>
+    </v-dialog>
+
+    <v-dialog
+      v-model="modalTerminos"
+      v-if="modalTerminos"
+      fullscreen
+      transition="dialog-bottom-transition">
+      <div class="modal-open-login">
+        <terminos
+          v-on:closeTerminosModal="closeTerminosModal"
+        ></terminos>
+        <div class="back-modal-active" style="position:fixed;" @click.stop="closeTerminosModal()">_</div>
+      </div>
+    </v-dialog>
+
+  </v-layout>
+</template>
+
+<script>
+import axios from 'axios'
+import trackingOnline from './trackingOnline'
+import loginUser from './cLoginUser'
+import registerUser from './cRegisterUser'
+import terminos from './cTerminos'
+import { EventBus } from '../config/ebus.js';
+
+var empresa = '';
+
+
+var carga_svg = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 82 50" style="enable-background:new 0 0 82 50;" xml:space="preserve"><g><path d="M18.4,39.6c0.1,0,0.2,0,0.3-0.1c0.6-0.7,2.5-2.4,3.6-2.3c0.6,0.1,1.1,0.5,1.6,1c0.6,0.6,1.3,1.2,2.4,1.1c0.9-0.1,1.4-0.6,2-1c0.6-0.5,1.1-1,2.1-1.1c0.9,0,1.3,0.4,1.8,1c0.5,0.6,1,1.2,2.1,1.1c1-0.1,1.6-0.6,2.2-1.1c0.6-0.5,1-1,2-1c0.9,0,1.4,0.5,1.9,1c0.5,0.5,1.1,1.1,2.1,1.1c0.9,0,1.5-0.6,2-1.1c0.5-0.5,1-1,2-1c0.9,0,1.2,0.4,1.6,0.8c0.4,0.5,0.9,1.2,2.3,1.2c1.3,0,1.9-0.6,2.5-1.1c0.5-0.5,0.9-0.9,1.9-0.9c0.9,0,1.2,0.4,1.5,0.9c0.4,0.6,0.9,1.3,2.3,1.3c1.4,0,2-0.7,2.5-1.3c0.4-0.5,0.7-0.9,1.4-0.9c0.8,0,1.3,0.6,1.8,1.2c0.5,0.6,1,1.2,1.8,1.2c0.2,0,0.4-0.2,0.4-0.4c0-0.2-0.2-0.4-0.4-0.4c-0.5,0-0.8-0.4-1.2-0.9c-0.5-0.6-1.2-1.4-2.3-1.5L66,23.1c0-0.1,0-0.2-0.1-0.3c-0.1-0.1-0.2-0.1-0.3-0.1h-0.7v-4.1c0-0.2-0.2-0.4-0.4-0.4h-6v-3.3c0-0.2-0.2-0.4-0.4-0.4h-6.4h-6.4c0,0,0,0,0,0c0,0,0,0,0,0H39c-0.2,0-0.4,0.2-0.4,0.4v3.5h-6.2c-0.2,0-0.4,0.2-0.4,0.4v4.2v0.1v3.8h-2.2V16.1c1.5-1.8,1.2-3.9,1.2-4c0-0.2-0.2-0.3-0.4-0.3h-8.6V8.7h1.5c0.2,0,0.4-0.2,0.4-0.4c0-0.2-0.2-0.4-0.4-0.4h-1.5V5.9c0-0.2-0.2-0.4-0.4-0.4c-0.2,0-0.4,0.2-0.4,0.4V8h-1.6c-0.2,0-0.4,0.2-0.4,0.4c0,0.2,0.2,0.4,0.4,0.4h1.6v3.1H19c-0.2,0-0.3,0.1-0.4,0.3c-0.5,2.2,1,3.6,1.5,4.1v10.6h-1c-0.2,0-0.3,0.1-0.4,0.3c0,0.3-1.1,6.1,2.7,9.6C20,37,18.3,38.8,18.1,39c-0.1,0.2-0.1,0.4,0,0.5C18.2,39.6,18.3,39.6,18.4,39.6z M44.8,22.4h-5.6V19h5.6V22.4z M39.2,23.2h5.6v3.4h-5.6V23.2z M45.6,22.4V19h5.6v3.5H45.6z M45.6,23.2h5.6v3.5h-5.6V23.2z M51.9,23.4h4.2l-1.4,3.3h-2.7V23.4z M52.1,22.6v-3.8h5.6v3.8h-1.1H52.1z M64.2,22.5h-5.6v-3.6h5.6V22.5z M57.8,18.1h-5.6v-2.9h5.6V18.1z M45.7,15.2h5.6v2.9h-5.6V15.2z M39.4,15.2H45v2.9h-5.6V15.2z M38.4,19v3.4h-5.6V19H38.4z M32.7,23.3h5.6v3.4h-5.6V23.3z M29.3,15.6h-2v-3.1h3C30.3,13.1,30.2,14.4,29.3,15.6z M23,15.6C23,15.6,23,15.5,23,15.6l0-3.1h3.6v3.1H23z M19.3,12.5h2.9v3c0,0,0,0.1,0,0.1h-1.6C20.4,15.3,19.1,14.2,19.3,12.5z M21,16.3h8.1v10.4H21V16.3z M19.5,27.4h1.1h8.9h2.9h6.4h6.4h6.4h3.3c0.1,0,0.3-0.1,0.3-0.2l1.7-3.8h1.2h7l-1.9,6.5H19.4C19.4,28.8,19.4,27.9,19.5,27.4z M19.5,30.6h43.6l-1.7,5.8c0,0.1,0,0.1,0,0.2c-0.6,0.2-1,0.6-1.4,1c-0.5,0.6-0.9,1.1-2,1.1c-1,0-1.3-0.4-1.7-1c-0.4-0.6-0.9-1.2-2.2-1.2c-1.2,0-1.8,0.6-2.4,1.1c-0.5,0.5-0.9,0.9-1.9,0.9c-1,0-1.3-0.4-1.7-0.9c-0.4-0.5-0.9-1.2-2.2-1.1c-1.3,0-2,0.7-2.5,1.3c-0.5,0.5-0.8,0.8-1.5,0.9c-0.7,0-1-0.4-1.5-0.9c-0.5-0.6-1.2-1.3-2.4-1.3c-1.2,0-1.9,0.6-2.5,1.2c-0.5,0.5-0.9,0.9-1.7,0.9c-0.7,0-1-0.4-1.5-0.9c-0.5-0.6-1.1-1.3-2.4-1.2c-1.3,0.1-2,0.7-2.6,1.3c-0.5,0.4-0.9,0.8-1.5,0.9c-0.7,0.1-1.2-0.4-1.8-1c-0.6-0.5-1.1-1-1.9-1.1c0-0.1,0-0.2-0.1-0.3C20.3,34.7,19.7,32.4,19.5,30.6z"/><path d="M65.6,43.8c-0.5,0-0.8-0.4-1.2-0.9c-0.5-0.7-1.2-1.5-2.4-1.5c-1,0-1.5,0.6-2,1.1c-0.5,0.6-0.9,1.1-2,1.1c-1,0-1.3-0.4-1.7-1c-0.4-0.6-0.9-1.2-2.2-1.2c-1.2,0-1.8,0.6-2.4,1.1c-0.5,0.5-0.9,0.9-1.9,0.9c-1,0-1.3-0.4-1.7-0.9c-0.4-0.5-0.9-1.2-2.2-1.1c-1.3,0-2,0.7-2.5,1.3c-0.5,0.5-0.8,0.8-1.5,0.9c-0.7,0-1-0.4-1.5-0.9c-0.5-0.6-1.2-1.3-2.4-1.3c-1.2,0-1.9,0.6-2.5,1.2c-0.5,0.5-0.9,0.9-1.7,0.9c-0.7,0-1-0.4-1.5-0.9c-0.5-0.6-1.1-1.3-2.4-1.2c-1.3,0.1-2,0.7-2.6,1.3c-0.5,0.4-0.9,0.8-1.5,0.9c-0.7,0.1-1.2-0.4-1.8-1c-0.6-0.5-1.1-1-2-1.1c-1.7-0.2-4,2.2-4.2,2.5c-0.1,0.2-0.1,0.4,0,0.5c0.1,0.1,0.2,0.1,0.2,0.1c0.1,0,0.2,0,0.3-0.1c0.6-0.7,2.5-2.4,3.6-2.3c0.6,0.1,1.1,0.5,1.6,1c0.6,0.6,1.3,1.2,2.4,1.1c0.9-0.1,1.4-0.6,2-1c0.6-0.5,1.1-1,2.1-1.1c0.9,0,1.3,0.4,1.8,1c0.5,0.6,1,1.2,2.1,1.1c1-0.1,1.6-0.6,2.2-1.1c0.6-0.5,1-1,2-1c0.9,0,1.4,0.5,1.9,1c0.5,0.5,1.1,1.1,2.1,1.1c0.9,0,1.5-0.6,2-1.1c0.5-0.5,1-1,2-1c0.9,0,1.2,0.4,1.6,0.8c0.4,0.5,0.9,1.2,2.3,1.2c1.3,0,1.9-0.6,2.5-1.1c0.5-0.5,0.9-0.9,1.9-0.9c0.9,0,1.2,0.4,1.5,0.9c0.4,0.6,0.9,1.3,2.3,1.3c1.4,0,2-0.7,2.5-1.3c0.4-0.5,0.7-0.9,1.4-0.9c0.8,0,1.3,0.6,1.8,1.2c0.5,0.6,1,1.2,1.8,1.2c0.2,0,0.4-0.2,0.4-0.4C66,43.9,65.8,43.8,65.6,43.8z"/></g></svg>';
+
+
+var aduanas_svg = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 82 50" style="enable-background:new 0 0 82 50;" xml:space="preserve"><g><path d="M49.6,27V11.8c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0-0.1-0.1-0.1c0,0,0,0,0,0l0,0c0,0,0,0,0,0L43,5c0,0,0,0,0,0c0,0-0.1-0.1-0.1-0.1c0,0,0,0,0,0c0,0,0,0,0,0H25.4c-0.2,0-0.3,0.1-0.3,0.3V38c0,0.2,0.1,0.3,0.3,0.3H39c1,3.9,4.6,6.8,8.8,6.8c5,0,9.1-4.1,9.1-9.1C56.9,31.6,53.8,27.9,49.6,27z M43.1,5.9l5.5,5.6h-5.5V5.9z M25.7,37.7V5.5h16.9v6.3c0,0.2,0.1,0.3,0.3,0.3H49v14.8c-0.4-0.1-0.8-0.1-1.2-0.1c-5,0-9.1,4.1-9.1,9.1c0,0.6,0.1,1.2,0.2,1.7H25.7z M47.8,44.5c-4.7,0-8.5-3.8-8.5-8.5s3.8-8.5,8.5-8.5c4.7,0,8.5,3.8,8.5,8.5S52.5,44.5,47.8,44.5z"/><path d="M51.8,33l-4.9,6l-3.4-2.7c-0.1-0.1-0.3-0.1-0.4,0c-0.1,0.1-0.1,0.3,0,0.4l3.6,2.9c0.1,0,0.1,0.1,0.2,0.1c0.1,0,0.2,0,0.2-0.1l5.1-6.2c0.1-0.1,0.1-0.3,0-0.4C52.1,32.9,51.9,32.9,51.8,33z"/><path d="M29.3,15.8h16.2c0.2,0,0.3-0.1,0.3-0.3c0-0.2-0.1-0.3-0.3-0.3H29.3c-0.2,0-0.3,0.1-0.3,0.3C29,15.7,29.1,15.8,29.3,15.8z"/><path d="M29.3,19.4h16.2c0.2,0,0.3-0.1,0.3-0.3s-0.1-0.3-0.3-0.3H29.3c-0.2,0-0.3,0.1-0.3,0.3S29.1,19.4,29.3,19.4z"/><path d="M29.3,22.4h16.2c0.2,0,0.3-0.1,0.3-0.3s-0.1-0.3-0.3-0.3H29.3c-0.2,0-0.3,0.1-0.3,0.3S29.1,22.4,29.3,22.4z"/><path d="M29.3,25.3h16.2c0.2,0,0.3-0.1,0.3-0.3c0-0.2-0.1-0.3-0.3-0.3H29.3c-0.2,0-0.3,0.1-0.3,0.3C29,25.2,29.1,25.3,29.3,25.3z"/><path d="M38.2,28.3h-8.9c-0.2,0-0.3,0.1-0.3,0.3c0,0.2,0.1,0.3,0.3,0.3h8.9c0.2,0,0.3-0.1,0.3-0.3C38.5,28.4,38.4,28.3,38.2,28.3z"/><path d="M36.3,31.3h-7c-0.2,0-0.3,0.1-0.3,0.3c0,0.2,0.1,0.3,0.3,0.3h7c0.2,0,0.3-0.1,0.3-0.3C36.6,31.4,36.5,31.3,36.3,31.3z"/></g></svg>';
+
+
+var domestica_svg = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 82 50" style="enable-background:new 0 0 82 50;" xml:space="preserve"><g><path d="M55.2,12.8H8.6v16h46.7V12.8z M12.9,28H9.3V13.5h3.6V28z M16.7,28h-3.1V13.5h3.1V28z M20.5,28h-3V13.5h3V28z M24.3,28h-3.1V13.5h3.1V28z M28,28H25V13.5H28V28z M31.8,28h-3.1V13.5h3.1V28z M35.6,28h-3V13.5h3V28z M39.4,28h-3.1V13.5h3.1V28z M43.2,28h-3.1V13.5h3.1V28z M47,28h-3V13.5h3V28z M50.8,28h-3.1V13.5h3.1V28z M54.5,28h-2.9V13.5h2.9V28z"/><path d="M15.6,32.8c-1.4,0-2.5,1.1-2.5,2.5s1.1,2.5,2.5,2.5c1.4,0,2.5-1.1,2.5-2.5S17,32.8,15.6,32.8z M15.6,37c-0.9,0-1.7-0.8-1.7-1.7s0.8-1.7,1.7-1.7s1.7,0.8,1.7,1.7S16.6,37,15.6,37z"/><path d="M23.8,32.8c-1.4,0-2.5,1.1-2.5,2.5s1.1,2.5,2.5,2.5c1.4,0,2.5-1.1,2.5-2.5S25.2,32.8,23.8,32.8z M23.8,37c-0.9,0-1.7-0.8-1.7-1.7s0.8-1.7,1.7-1.7c0.9,0,1.7,0.8,1.7,1.7S24.8,37,23.8,37z"/><path d="M43,32.8c-1.4,0-2.5,1.1-2.5,2.5s1.1,2.5,2.5,2.5c1.4,0,2.5-1.1,2.5-2.5S44.3,32.8,43,32.8z M43,37c-0.9,0-1.7-0.8-1.7-1.7s0.8-1.7,1.7-1.7c0.9,0,1.7,0.8,1.7,1.7S43.9,37,43,37z"/><path d="M51.2,32.8c-1.4,0-2.5,1.1-2.5,2.5s1.1,2.5,2.5,2.5c1.4,0,2.5-1.1,2.5-2.5S52.5,32.8,51.2,32.8z M51.2,37c-0.9,0-1.7-0.8-1.7-1.7s0.8-1.7,1.7-1.7c0.9,0,1.7,0.8,1.7,1.7S52.1,37,51.2,37z"/><path d="M69.4,33c-1.4,0-2.5,1.1-2.5,2.5S68,38,69.4,38s2.5-1.1,2.5-2.5S70.7,33,69.4,33z M69.4,37.2c-0.9,0-1.7-0.8-1.7-1.7s0.8-1.7,1.7-1.7s1.7,0.8,1.7,1.7S70.3,37.2,69.4,37.2z"/><rect x="28.3" y="34.4" width="10.2" height="0.8"/><rect x="55.2" y="34.5" width="10" height="0.8"/><path d="M75.6,30.6L75.6,30.6c0-0.1,0.3-1.5-0.7-2.7c-0.9-1.1-2.5-1.7-4.8-1.7c-0.1-1.5-0.9-7.3-7.5-10.2l-5.8,0v14.1H8.5v5.1h2.6v-0.8H9.3v-3.6h47.8v0h17.8v3.6h-1.8v0.8h2.5L75.6,30.6L75.6,30.6z M57.4,30.1v-9.6h3.2v-0.7h-3.2v-3.1h4.8c7.1,3.1,7,9.5,7,9.8l0,0.4h0.4c2.3,0,3.8,0.5,4.6,1.5c0.5,0.6,0.6,1.4,0.6,1.7H57.4z"/><path d="M63.2,21.1v4.3h4.2C67.4,25.5,66.4,21.5,63.2,21.1z"/></g></svg>';
+
+
+var almacenes_svg = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 82 50" style="enable-background:new 0 0 82 50;" xml:space="preserve"><g><path d="M61.4,19.8L41.2,7.1c-0.1-0.1-0.3-0.1-0.5,0L20.6,19.8c-0.2,0.1-0.2,0.3-0.2,0.5c0.1,0.2,0.2,0.3,0.4,0.3h2.1v21.9c0,0.2,0.2,0.5,0.4,0.5h4.3c0.2,0,0.4-0.2,0.4-0.5v-19h25.7v19c0,0.2,0.2,0.5,0.5,0.5h4.4c0.2,0,0.4-0.2,0.4-0.5V20.7h2c0.2,0,0.4-0.1,0.4-0.3C61.7,20.1,61.6,19.9,61.4,19.8z M58.7,19.8c-0.2,0-0.5,0.2-0.5,0.5v21.9h-3.5v-19c0-0.2-0.2-0.5-0.5-0.5H27.7c-0.2,0-0.5,0.2-0.5,0.5v19h-3.4V20.2c0-0.2-0.2-0.5-0.5-0.5h-1L41,8l18.6,11.8H58.7z"/><path d="M36.1,14.6c0,0.2,0.2,0.5,0.5,0.5h8.8c0.2,0,0.5-0.2,0.5-0.5c0-0.2-0.2-0.4-0.5-0.4h-8.8C36.3,14.2,36.1,14.4,36.1,14.6z"/><path d="M33.4,17.4c0,0.2,0.2,0.4,0.4,0.4h14.4c0.2,0,0.5-0.2,0.5-0.4c0-0.2-0.2-0.5-0.5-0.5H33.8C33.6,17,33.4,17.2,33.4,17.4z"/><path d="M47.4,26.7H39c-0.2,0-0.5,0.2-0.5,0.5v6.4l-3.8-1.8c-0.1-0.1-0.3-0.1-0.4,0l-4.1,1.8c0,0,0,0,0,0c0,0-0.1,0-0.1,0.1c0,0,0,0,0,0c0,0-0.1,0.1-0.1,0.1c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0.1,0,0.1c0,0,0,0,0,0v5.7c0,0.2,0.1,0.3,0.3,0.4l4.1,1.7c0.1,0,0.1,0,0.2,0c0,0,0,0,0,0c0,0,0,0,0,0c0.1,0,0.2,0,0.3-0.1l3.7-1.8v1.4c0,0.2,0.2,0.5,0.5,0.5h8.4c0.2,0,0.5-0.2,0.5-0.5V27.1C47.9,26.9,47.7,26.7,47.4,26.7z M42.1,27.6H44v1.6l-0.4-0.4c-0.2-0.2-0.4-0.2-0.6,0l-0.9,0.6V27.6z M41.2,27.6v2.7c0,0.2,0.1,0.3,0.2,0.4c0.2,0.1,0.3,0.1,0.5,0l1.3-0.9l0.9,0.9c0.1,0.1,0.2,0.1,0.3,0.1c0.1,0,0.1,0,0.2,0c0.2-0.1,0.3-0.2,0.3-0.4v-2.7H47v6.2h-7.5v-6.2H41.2z M42.1,34.6H44v1.6l-0.4-0.4c-0.2-0.2-0.4-0.2-0.6,0l-0.9,0.6V34.6z M34.6,32.6l3.1,1.5l-3.1,1.3l-3.1-1.5L34.6,32.6z M30.9,34.6l3.2,1.5v4.5l-3.2-1.4V34.6z M35,40.6v-4.4l3.2-1.4V39L35,40.6z M39.4,40.9v-6.2h1.7v2.6c0,0.2,0.1,0.3,0.2,0.4c0.2,0.1,0.3,0.1,0.5,0l1.3-0.9l0.9,0.9c0.1,0.1,0.2,0.1,0.3,0.1c0.1,0,0.1,0,0.2,0c0.2-0.1,0.3-0.2,0.3-0.4v-2.7H47v6.2H39.4z"/></g></svg>';
+
+
+var distribucion_svg = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 82 50" style="enable-background:new 0 0 82 50;" xml:space="preserve"><g><path d="M60.8,19.1H55v-3.2c0,0,0,0,0,0c0,0,0,0,0,0c0-0.2-0.1-0.4-0.3-0.5l-5.1-5.1c-0.1-0.1-0.2-0.2-0.4-0.2H35.9c-0.1,0-0.3,0.1-0.4,0.2l-5.1,5.2c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0,0,0c0,0,0,0,0,0.1c0,0,0,0,0,0c0,0,0,0,0,0.1c0,0,0,0.1,0,0.1v20.8c0,0.3,0.2,0.5,0.5,0.5H35c0.2,1.6,1.5,2.9,3.2,2.9c1.7,0,3-1.3,3.2-2.9h11.9h1.1h2.1c0.2,1.6,1.5,2.9,3.2,2.9s3-1.3,3.2-2.9h3.4c0.3,0,0.5-0.2,0.5-0.5V25.6C66.9,19.4,60.9,19.1,60.8,19.1z M53,15.2H42.8v-4.1h6.2L53,15.2z M36.1,11.1h5.6v4.1H32L36.1,11.1z M38.2,38.9c-1.2,0-2.1-1-2.1-2.1c0-1.2,1-2.1,2.1-2.1s2.1,1,2.1,2.1C40.3,37.9,39.4,38.9,38.2,38.9z M53.3,36h-12c-0.3-1.4-1.6-2.5-3.1-2.5S35.4,34.6,35,36h-3.8V16.3h22.6V36H53.3z M59.8,38.9c-1.2,0-2.1-1-2.1-2.1c0-1.2,1-2.1,2.1-2.1s2.1,1,2.1,2.1C61.9,37.9,60.9,38.9,59.8,38.9z M65.8,36h-2.9c-0.3-1.4-1.6-2.5-3.1-2.5S57,34.6,56.6,36H55V20.2h5.8c0.3,0,5,0.4,5,5.5V36z"/><path d="M27.3,20.5h-7.8c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h7.8c0.3,0,0.5-0.2,0.5-0.5S27.6,20.5,27.3,20.5z"/><path d="M27.3,30.6h-7.8c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h7.8c0.3,0,0.5-0.2,0.5-0.5S27.6,30.6,27.3,30.6z"/><path d="M27.3,25.6H15.7c-0.3,0-0.5,0.2-0.5,0.5s0.2,0.5,0.5,0.5h11.7c0.3,0,0.5-0.2,0.5-0.5S27.6,25.6,27.3,25.6z"/></g></svg>';
+
+
+var express_svg = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 82 50" style="enable-background:new 0 0 82 50;" xml:space="preserve"><g><path d="M57.1,27.5c-0.4-4.4-5.3-7.8-6.5-8.6v-1c0.5,1.1,1.4,1.6,2,1.7c0,0,0.1,0,0.1,0h3.7c0.3,0,0.5-0.2,0.5-0.5v-6.3c0-0.3-0.2-0.5-0.5-0.5h-3.4c0,0-0.1,0-0.1,0c-0.6,0.1-1.7,0.6-2.3,1.7v-0.9c0-2.2-1.6-2.9-2.5-2.9h-6c0,0,0,0-0.1,0c-0.7,0.1-2.1,0.8-2.1,2.6c0,1.8,1.2,2.6,1.8,2.8c0,0,0.1,0,0.1,0h3.6v13.7h-7.2c-0.4-1-1-2-1.8-3v-6.6c0-2.8-2.2-3.8-3.4-3.9c0,0,0,0-0.1,0h-7.6c0,0-0.1,0-0.1,0c-0.7,0.1-2,0.8-2,2.4c0,1.7,1.2,2.4,1.9,2.6c0,0,0.1,0,0.1,0h4.1v2.7C19.4,23.9,19,33.6,19,33.7c0,0.1,0,0.3,0.1,0.4c0.1,0.1,0.2,0.2,0.4,0.2h3.6c0.2,3.2,2.8,5.6,6.2,5.6c3.3,0,6-2.4,6.2-5.6H47c0.3,0,0.5-0.2,0.5-0.5s-0.2-0.5-0.5-0.5h-7.7c-0.1-0.6-0.2-1.6-0.7-2.9H46c0.3,0,0.5-0.2,0.5-0.5V15.1c0-0.3-0.2-0.5-0.5-0.5h-4.1c-0.2-0.1-1-0.5-1-1.8c0-1.3,1-1.6,1.2-1.6l5.9,0c0.1,0,1.5,0.1,1.5,1.9v6.1c0,0.2,0.1,0.3,0.2,0.4c0.1,0,5.9,3.6,6.3,7.9c-3.1,0.4-5.4,3-5.4,6.1c0,3.4,2.8,6.2,6.2,6.2s6.2-2.8,6.2-6.2C63,30.4,60.4,27.6,57.1,27.5z M53,13.2h2.9v5.3h-3.1c-0.2-0.1-1.6-0.5-1.6-2.6C51.2,13.7,52.7,13.3,53,13.2z M25.4,19.9c-0.2-0.1-1.1-0.4-1.1-1.6c0-1.1,0.9-1.4,1.1-1.4H33c0.3,0,2.5,0.4,2.5,2.9v5.6c-1.2-1-2.9-1.7-5-1.8v-3.2c0-0.3-0.2-0.5-0.5-0.5H25.4z M29.3,38.8c-2.8,0-5-1.9-5.1-4.6h10.3C34.2,36.8,32.1,38.8,29.3,38.8z M20.1,33.2c0.1-0.8,0.4-2.4,1.3-4.1c1.7-3,4.6-4.6,8.6-4.6c6.8,0,8.1,6.8,8.3,8.6H20.1z M56.8,38.8c-2.8,0-5.2-2.3-5.2-5.2s2.3-5.2,5.2-5.2c2.8,0,5.2,2.3,5.2,5.2S59.7,38.8,56.8,38.8z"/><circle cx="56.6" cy="33.7" r="1.1"/></g></svg>';
+
+
+var stop_svg = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 82 50" style="enable-background:new 0 0 82 50;" xml:space="preserve"><g><path d="M58.9,6.7H46.9H35.1H23.1c-0.2,0-0.4,0.2-0.4,0.4v33.6c0,0.2,0.2,0.4,0.4,0.4h0.7v1.8c0,0.2,0.2,0.4,0.4,0.4h0.6c0.1,0,0.2,0,0.3-0.1l2-2.1h4.7l1.8,2.1c0.1,0.1,0.2,0.1,0.3,0.1h0.8c0.2,0,0.4-0.2,0.4-0.4v-1.8h0.2h0.2v1.8c0,0.2,0.2,0.4,0.4,0.4h0.6c0.1,0,0.2,0,0.3-0.1l2-2.1h4.7l1.8,2.1c0.1,0.1,0.2,0.1,0.3,0.1h0.8c0.2,0,0.4-0.2,0.4-0.4v-1.8h0.3h0.5v1.8c0,0.2,0.2,0.4,0.4,0.4h0.6c0.1,0,0.2,0,0.3-0.1l2-2.1h4.7l1.8,2.1c0.1,0.1,0.2,0.1,0.3,0.1h0.8c0.2,0,0.4-0.2,0.4-0.4v-1.8h0.3c0.2,0,0.4-0.2,0.4-0.4V7.1C59.3,6.8,59.2,6.7,58.9,6.7z M24.5,42.5v-1.4h1.3L24.5,42.5z M26.8,40.3h-3.3V7.5h11.2v32.8h-2.8H26.8z M34.2,42.5h-0.2l-1.2-1.4h1.4V42.5z M36.2,42.5v-1.4h1.3L36.2,42.5z M38.4,40.3h-2.9V7.5h10.9v32.8h-3H38.4z M45.8,42.5h-0.2l-1.2-1.4h1.4V42.5z M48.2,42.5v-1.4h1.3L48.2,42.5z M50.4,40.3h-3.1V7.5h11.2v32.8h-3H50.4z M57.8,42.5h-0.2l-1.2-1.4h1.4V42.5z"/><path d="M26.3,11.7h6c0.2,0,0.4-0.2,0.4-0.4s-0.2-0.4-0.4-0.4h-6c-0.2,0-0.4,0.2-0.4,0.4S26.1,11.7,26.3,11.7z"/><path d="M26.3,13.7h6c0.2,0,0.4-0.2,0.4-0.4s-0.2-0.4-0.4-0.4h-6c-0.2,0-0.4,0.2-0.4,0.4S26.1,13.7,26.3,13.7z"/><path d="M25.9,34.2c0,0.2,0.2,0.4,0.4,0.4h6c0.2,0,0.4-0.2,0.4-0.4c0-0.2-0.2-0.4-0.4-0.4h-6C26.1,33.8,25.9,34,25.9,34.2z"/><path d="M32.7,36.3c0-0.2-0.2-0.4-0.4-0.4h-6c-0.2,0-0.4,0.2-0.4,0.4c0,0.2,0.2,0.4,0.4,0.4h6C32.6,36.7,32.7,36.5,32.7,36.3z"/><path d="M26.1,27.3v-4.4c0-0.2-0.2-0.4-0.4-0.4c-0.2,0-0.4,0.2-0.4,0.4v4.4c0,0.2,0.2,0.4,0.4,0.4C25.9,27.7,26.1,27.5,26.1,27.3z"/><path d="M29.6,21.3c0-0.8-0.6-1.4-1.4-1.4c-0.8,0-1.4,0.6-1.4,1.4c0,0.8,0.6,1.4,1.4,1.4C29,22.6,29.6,22,29.6,21.3z M27.7,21.3c0-0.3,0.2-0.6,0.6-0.6c0.3,0,0.6,0.2,0.6,0.6c0,0.3-0.2,0.6-0.6,0.6C27.9,21.8,27.7,21.6,27.7,21.3z"/><path d="M37.9,11.7h6c0.2,0,0.4-0.2,0.4-0.4s-0.2-0.4-0.4-0.4h-6c-0.2,0-0.4,0.2-0.4,0.4S37.7,11.7,37.9,11.7z"/><path d="M37.9,13.7h6c0.2,0,0.4-0.2,0.4-0.4s-0.2-0.4-0.4-0.4h-6c-0.2,0-0.4,0.2-0.4,0.4S37.7,13.7,37.9,13.7z"/><path d="M37.5,34.2c0,0.2,0.2,0.4,0.4,0.4h6c0.2,0,0.4-0.2,0.4-0.4c0-0.2-0.2-0.4-0.4-0.4h-6C37.7,33.8,37.5,34,37.5,34.2z"/><path d="M44.3,36.3c0-0.2-0.2-0.4-0.4-0.4h-6c-0.2,0-0.4,0.2-0.4,0.4c0,0.2,0.2,0.4,0.4,0.4h6C44.2,36.7,44.3,36.5,44.3,36.3z"/><path d="M37.7,27.3v-4.4c0-0.2-0.2-0.4-0.4-0.4s-0.4,0.2-0.4,0.4v4.4c0,0.2,0.2,0.4,0.4,0.4S37.7,27.5,37.7,27.3z"/><path d="M41.2,21.3c0-0.8-0.6-1.4-1.4-1.4c-0.8,0-1.4,0.6-1.4,1.4c0,0.8,0.6,1.4,1.4,1.4C40.6,22.6,41.2,22,41.2,21.3z M39.3,21.3c0-0.3,0.2-0.6,0.6-0.6c0.3,0,0.6,0.2,0.6,0.6c0,0.3-0.2,0.6-0.6,0.6C39.5,21.8,39.3,21.6,39.3,21.3z"/><path d="M49.9,11.7h6c0.2,0,0.4-0.2,0.4-0.4s-0.2-0.4-0.4-0.4h-6c-0.2,0-0.4,0.2-0.4,0.4S49.7,11.7,49.9,11.7z"/><path d="M49.9,13.7h6c0.2,0,0.4-0.2,0.4-0.4s-0.2-0.4-0.4-0.4h-6c-0.2,0-0.4,0.2-0.4,0.4S49.7,13.7,49.9,13.7z"/><path d="M49.5,34.2c0,0.2,0.2,0.4,0.4,0.4h6c0.2,0,0.4-0.2,0.4-0.4c0-0.2-0.2-0.4-0.4-0.4h-6C49.7,33.8,49.5,34,49.5,34.2z"/><path d="M56.3,36.3c0-0.2-0.2-0.4-0.4-0.4h-6c-0.2,0-0.4,0.2-0.4,0.4c0,0.2,0.2,0.4,0.4,0.4h6C56.2,36.7,56.3,36.5,56.3,36.3z"/><path d="M49.7,27.3v-4.4c0-0.2-0.2-0.4-0.4-0.4s-0.4,0.2-0.4,0.4v4.4c0,0.2,0.2,0.4,0.4,0.4S49.7,27.5,49.7,27.3z"/><path d="M53.2,21.3c0-0.8-0.6-1.4-1.4-1.4c-0.8,0-1.4,0.6-1.4,1.4c0,0.8,0.6,1.4,1.4,1.4C52.6,22.6,53.2,22,53.2,21.3z M51.3,21.3c0-0.3,0.2-0.6,0.6-0.6c0.3,0,0.6,0.2,0.6,0.6c0,0.3-0.2,0.6-0.6,0.6C51.5,21.8,51.3,21.6,51.3,21.3z"/></g></svg>';
+
+
+var fedex_svg = '<svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 82 50" style="enable-background:new 0 0 82 50;" xml:space="preserve"><style type="text/css">.st0{fill:#FFFFFF;}.st1{fill:#110D13;}</style><g><g><polygon class="st0" points="65.1,30.8 62.8,28.1 60.5,30.8 55.7,30.8 60.4,25.2 55.7,19.6 60.7,19.6 63,22.4 65.3,19.6 70.1,19.6 65.4,25.2 70.2,30.8 "/><path class="st1" d="M70.6,31h-5.5l-2.2-2.6L60.6,31h-5.4l4.9-5.8l-4.9-5.8h5.5l2.3,2.6l2.2-2.6h5.4l-4.9,5.8L70.6,31z M65.2,30.6h4.5l-4.6-5.4l4.6-5.4h-4.3L63,22.7l-2.4-2.8h-4.5l4.6,5.4l-4.6,5.4h4.3l2.4-2.9L65.2,30.6z"/></g><g><polygon class="st0" points="46.3,30.8 46.3,13.2 55.7,13.2 55.7,17.1 50.3,17.1 50.3,19.6 55.7,19.6 55.7,23.4 50.3,23.4 50.3,26.9 55.7,26.9 55.7,30.8 "/><path class="st1" d="M55.9,31h-9.7V13h9.7v4.3h-5.4v2.1h5.4v4.2h-5.4v3.1h5.4V31z M46.5,30.6h8.9v-3.6h-5.4v-3.9h5.4v-3.4h-5.4v-2.9h5.4v-3.5h-8.9V30.6z"/></g><path class="st1" d="M42.1,13.1v7.2c-0.8-0.9-1.9-1.4-3.4-1.4c-2.5,0-4.7,1.6-5.5,4.1c-0.9-2.7-3.1-4.2-6.1-4.2c-2.4,0-4.4,1-5.5,2.8v-2.1h-5.3v-2.4h5.7v-4.1H11.6v17.8h4.8v-7.4h4.5c-0.1,0.5-0.2,1.1-0.2,1.7c0,3.6,2.8,6.3,6.5,6.3c3,0,5-1.3,6.1-4c0.8,2.4,3,4.1,5.5,4.1c1.3,0,2.5-0.6,3.3-1.7v1.1h4.3V13.1H42.1z M42,25.3c0,2.1-1.2,2.8-2.3,2.8c-1.5,0-2.4-1.4-2.4-2.8c0-1.5,0.8-3,2.4-3C41.4,22.2,42,23.8,42,25.3z M25.1,23.4c0.3-1,1.1-1.7,2.1-1.7c1.1,0,1.9,0.6,2.2,1.7H25.1z M29.2,27.4L29.2,27.4c-0.6,0.8-1,1-2,1c-1.2,0-2.2-1-2.3-2.3H33c0.1,0.4,0.2,0.9,0.3,1.3H29.2z"/><g><polygon class="st1" points="47,36.7 49.8,36.7 49.8,36.1 47,36.1 47,33.9 49.9,33.9 49.9,33.3 46.3,33.3 46.3,39.7 50,39.7 50,39.1 47,39.1 "/><polygon class="st1" points="54.5,35.2 53.7,35.2 52.4,36.9 51.1,35.2 50.3,35.2 52,37.4 50.2,39.7 51.1,39.7 52.4,37.9 53.8,39.7 54.6,39.7 52.8,37.4 "/><path class="st1" d="M57,35.1c-0.6,0-1,0.2-1.4,0.6l0-0.5h-0.7l0,0.1c0,0.4,0,0.9,0,1.3v4.8h0.7v-2.2c0.3,0.4,0.8,0.6,1.3,0.6c1.5,0,2-1.3,2-2.4C59,36.4,58.4,35.1,57,35.1z M58.3,37.5c0,0.4-0.1,1.8-1.4,1.8c-1.1,0-1.3-1-1.3-1.8c0-0.8,0.2-1.8,1.3-1.8C57.2,35.7,58.3,35.8,58.3,37.5z"/><path class="st1" d="M62.1,35.1L62.1,35.1c-0.2,0-0.2,0-0.3,0c-0.5,0-1,0.2-1.2,0.6l0-0.5h-0.7l0,0.1c0,0.4,0,0.9,0,1.3v3.2h0.7v-2.6c0-0.4,0.1-1.4,1.1-1.4c0.1,0,0.2,0,0.3,0l0.1,0V35.1z"/><path class="st1" d="M64.1,35.1c-1.3,0-2.1,1-2.1,2.5c0,1.4,0.7,2.3,2,2.3c1,0,1.6-0.5,1.9-1.4l0-0.1h-0.6l0,0c-0.1,0.4-0.4,0.9-1.2,0.9c-1,0-1.4-0.9-1.4-1.7h3.2v-0.1C65.9,36,65.3,35.1,64.1,35.1z M64.1,35.6c0.8,0,1.2,0.8,1.2,1.5h-2.5C62.8,36.1,63.3,35.6,64.1,35.6z"/><path class="st1" d="M68.2,37.1c-0.6-0.2-1.1-0.3-1.1-0.8c0-0.6,0.7-0.7,0.9-0.7c0.5,0,0.9,0.3,0.9,0.8l0,0.1h0.7l0-0.1c0-0.9-0.6-1.3-1.6-1.3c-0.5,0-1.6,0.1-1.6,1.3c0,0.9,0.8,1.1,1.5,1.3l0,0c0.6,0.2,1,0.3,1,0.8c0,0.5-0.4,0.8-1,0.8c-0.6,0-1-0.3-1-0.9v-0.1h-0.7v0.1c0,0.9,0.6,1.5,1.7,1.5c1.1,0,1.7-0.5,1.7-1.4C69.7,37.5,68.9,37.3,68.2,37.1z"/><path class="st1" d="M71.9,37.1c-0.6-0.2-1.1-0.3-1.1-0.8c0-0.6,0.7-0.7,0.9-0.7c0.5,0,0.9,0.3,0.9,0.8l0,0.1h0.7l0-0.1c0-0.9-0.6-1.3-1.6-1.3c-0.5,0-1.6,0.1-1.6,1.3c0,0.9,0.8,1.1,1.5,1.3l0,0c0.6,0.2,1,0.3,1,0.8c0,0.5-0.4,0.8-1,0.8c-0.6,0-1-0.3-1-0.9v-0.1H70v0.1c0,0.9,0.6,1.5,1.7,1.5c1.1,0,1.7-0.5,1.7-1.4C73.4,37.5,72.6,37.3,71.9,37.1z"/></g></g></svg>';
+
+
+
+export default {
+
+  props:['sesionIniciada','nombreUsuario'],
+  data () {
+
+    return {
+      prueba:true,
+      openLogin: false,
+      openRegister:false,
+      trackingOnline:false,
+
+      openCount: 0,
+
+      drawer: false,
+      itemactive: false,
+      activekey: null,
+      isActive: null,
+      subMenu: [],
+      linksMenu: [
+        { name: 'PARA EMPRESAS', url: 'empresa', isFather: true, isActive: false, items: [
+          {name: 'Carga <br />Internacional', url: 'carga-internacional', icon: './images/servicios/icon_carga.svg', alt: 'icon Carga Internacional', isUrl: true, iconraw:carga_svg},
+          {name: 'Aduanas', url: 'aduanas', icon: './images/servicios/icon_aduanas.svg', alt: 'icon Aduanas', isUrl: true, iconraw:aduanas_svg},
+          {name: 'Carga <br />Doméstica', url: 'carga-domestica', icon: './images/servicios/icon_carga_domestica.svg', alt: 'icon Carga Doméstica', isUrl: true, iconraw:domestica_svg},
+          {name: 'Almacen', url: 'almacen', icon: './images/servicios/icon_almacen.svg', alt: 'icon Almacen', isUrl: true, iconraw:almacenes_svg},
+          {name: 'Distribución', url: 'distribucion', icon: './images/servicios/icon_distribucion.svg', alt: 'icon Distribución', isUrl: true, iconraw:distribucion_svg},
+          {name: 'Envíos <br />Express', url: 'express', icon: './images/servicios/icon_express.svg', alt: 'icon Scharff Express', isUrl: true, iconraw:express_svg},
+          {name: 'Lockers', url: 'scharff-stop', icon: './images/servicios/icon_locker.svg', alt: 'icon Scharff Stop', isUrl: true, iconraw:stop_svg},
+          {name: 'Envíos Internacionales', url: 'fedex', icon: './images/servicios/icon_fedex.svg', alt: 'fedex', isUrl: true, iconraw:fedex_svg},
+
+          // {name: '', url: '', icon: './images/servicios/icon_cotizador.svg', alt: 'fedex', isUrl: false }
+        ]},
+        { name: 'PARA TI', url: 'paraTi', isFather: true, isActive: false, items: [
+          {name: 'Envíos <br />regulares', url: 'envio-regular', icon: './images/servicios/icon_distribucion.svg', alt: 'icon Distribución', isUrl: true, iconraw:distribucion_svg},
+
+          {name: 'Envíos <br />Express', url: 'express', icon: './images/servicios/icon_express.svg', alt: 'icon Scharff Express', isUrl: true, iconraw:express_svg },
+          // {name: 'Scharff Stop', url: 'scharffStop', icon: './images/servicios/stop.svg', alt: 'icon Scharff Stop', isUrl: true },
+          {name: 'Lockers', url: 'scharff-stop', icon: './images/servicios/icon_locker.svg', alt: 'icon Scharff Stop', isUrl: true, iconraw:stop_svg },
+          // {name: '', url: '', icon: './images/info-for-you.png', alt: 'more info', isUrl: false }
+
+        ]},
+        { name: 'SCHARFF LAB', url: 'lab', isFather: false, isActive: true, isUrl: true},
+        { name: 'TRACKING ONLINE', url: '', isFather: false, isActive: false,},
+        { name: '¿NECESITAS AYUDA?', url: 'faq', isFather: false, isActive: false, isUrl: true}
+      ],
+      cotizadorIcon: {alt: 'cotizador', url: '/images/icon_cotizador.png'},
+      btnEntrar: { name: '¿ERES CLIENTE?', url: ''},
+      btnCreate: { name: 'CREAR UNA CUENTA', url: ''},
+      logoSec: true,
+      windowWidth: null,
+      htmlHeight: 0,
+      rememberAccount: false,
+      retinax2: true,
+      borderActual: '',
+      logoScharffx2: {url:'/images/scharff_logo@2x.png'},
+      logoScharffx1: {url:'/images/scharff_logo@1x.png'},
+      logoScharffx1: {url:'/images/scharff_logo@1x.png'},
+      logoScharffx2: {url:'/images/scharff_logo@2x.png'},
+      subtitle:'Más de 30 años diseñando logistica',
+      component_class:'',
+      styleObjectLine: {
+
+      },
+      modalTerminos:false,
+
+      user:{name: '', img: '/images/icon_login.png'},
+      referencia:null,
+
+      regular_codetracking:''
+
+
+    }
+  },
+  mounted () {
+    this.$nextTick(function() {
+      window.addEventListener('resize', this.getWindowWidth);
+    })
+    this.getWindowWidth();
+    this.pathActual();
+
+    var vm = this;
+    EventBus.$on('openLoginRm', function(intencion){
+      //console.log("va ya aquii"+intencion);
+      if(vm.sesionIniciada && intencion=='express'){
+        vm.$router.push({name: 'package'})
+      }else if(vm.sesionIniciada && intencion=='stop'){
+        vm.$router.push({name: 'locker'})
+      }else{
+        vm.openLogin = true;
+      }
+    });
+
+    this.$parent.$on('update_menu_t', this.pathActual);
+
+
+    if(this.sesionIniciada){
+      this.loadUserData();
+    }else if(window.location.hash === "#login"){
+      setTimeout(function(){
+        if(!vm.sesionIniciada){
+          vm.openLogin=true;
+        }
+      },2000);
+
+      setTimeout(function(){
+        window.location.hash = '';
+      },5000);
+    }
+    else if(window.location.hash === "#empresa"){
+      setTimeout(function(){
+        if(!vm.sesionIniciada){
+          vm.openLogin=true;
+        }
+      },2000);
+      setTimeout(function(){
+        window.location.hash = '';
+      },5000);
+    }
+
+
+    if(window.location.hash&&window.location.hash.indexOf('#tracking_')!==-1){
+      let hash = window.location.hash;
+      var a = hash.split('#tracking_');
+      this.regular_codetracking=a[1];
+      //alert(this.regular_codetracking);
+      this.showTracking();
+    }
+
+
+    if(this.$route.name=='registro'){
+      this.openRegister=true;
+      console.log('this.$route.query');
+      if(this.$route.query&&this.$route.query.tipo){
+        vm.referencia = this.$route.query.tipo;
+      }
+      console.log(this.$route.query);
+    }
+
+  },
+  watch:{
+    windowWidth: function (el) {
+      if(el>=1189 || el<930 && el>425){
+        this.logoSec = true
+      } else {
+        this.logoSec = false
+      }
+      if(el < 425){
+        this.retinax2 = false
+        this.logoSec = true
+      } else {
+        this.retinax2 = true
+      }
+    },
+    stateChangeLogin: function (el) {
+      console.log("desde footer");
+      console.log(el);
+      if(el){
+        this.loadOpenLogin('login')
+      }
+    },
+    stateChangeRegister: function (el) {
+      console.log('el');
+      console.log(el);
+      if(el) {
+        this.loadOpenLogin('register')
+      }
+    },
+    openRegister: function (el) {
+      if(!el) {
+        this.$store.commit('setStateRegister', false);
+      }
+    },
+    stateChangeTracking: function (el) {
+      if(el) {
+        this.showTracking()
+      }
+    },
+    sesionIniciada: function (el) {
+      if(el) {
+        this.loadUserData();
+        this.openLogin = false;
+      }
+    },
+  },
+  computed: {
+    stateChangeLogin: function () {
+      return this.$store.getters.loadStateLogin
+    },
+    stateChangeRegister: function () {
+      return this.$store.getters.loadStateRegister
+    },
+    stateChangeTracking: function () {
+      return this.$store.getters.loadStateTracking
+    },
+    stateChangeParent: function () {
+      return this.$store.getters.loadStateParent
+    }
+
+  },
+  methods: {
+
+    loadUserData:function(){
+      var vm = this;
+
+      var user_info = localStorage.getItem("user_p_info");
+      user_info = JSON.parse(user_info);
+      if(vm.nombreUsuario==='Superadmin'){
+        vm.user.name = 'Admin'
+      }else{
+        var nombre_info = user_info.usuario_nombre;
+        vm.user.name = nombre_info;
+      }
+
+    },
+    gotoAdmin:function(){
+      console.log("asdasd asdasd");
+      if(this.nombreUsuario==='Superadmin'){
+        document.location ='/superadmin';
+      }else{
+        this.$router.push('/admin');
+      }
+
+      document.title='Scharff - Grupo Scharff'
+    },
+    open_terminos:function(){
+      this.modalTerminos = true;
+    },
+
+    closeTerminosModal:function(){
+      this.modalTerminos = false;
+    },
+
+    backToHome: function() {
+      this.$router.push('/')
+      this.pathActual();
+      this.$scrollTo('#menu-home',1000);
+      //this.$parent.$emit('loadDataAsincrono', 1);
+    },
+
+    gotoPage: function(page) {
+      if(page==='fedex'){
+        window.open('https://www.fedex.com/pe/', '_blank');
+        this.closeItem();
+        return false;
+      }
+      //console.log(222);
+
+      this.$router.push(page);
+      this.$scrollTo('#menu-home',1000);
+
+      this.$store.commit('setStateParent', this.activekey);
+      this.pathActual();
+      //console.log(this.$route.name);
+      //this.$parent.$emit('loadDataAsincrono', 1);
+      this.closeItem();
+      this.closeDraweL();
+
+      //console.log("despachado");
+
+
+
+
+    },
+    pathActual: function() {
+
+      //console.log("_____-");
+
+
+      let path = this.$route.name;
+      //this.$ua.trackView(path);
+      console.log(path);
+      switch(path) {
+        case 'scharff-express':
+          this.borderActual = 'solid 0.2rem black!important';
+          this.logoScharffx2 = {url: './images/scharff_logo@2x.png'};
+          this.logoScharffx1 = {url: './images/scharff_logo@1x.png'};
+          this.subtitle = 'Express';
+          this.styleObjectLine = {
+            fontSize: '1.8rem',
+            lineHeight: '2rem',
+            fontFamily: 'Carnas-Medium',
+            paddingTop: '7px'
+          };
+
+          break;
+        case 'scharff-club':
+          this.logoScharffx2 = {url: './images/club/logo_scharffclub.png'};
+          this.logoScharffx1 = {url: './images/club/logo_scharffclub-2x.png'};
+          this.subtitle = '';
+          this.component_class = 'scharff-club';
+          break;
+        case 'domestica':
+          this.borderActual = 'solid 0.2rem #ff535a';
+          this.logoScharffx2 = {url: './images/scharff_logo@2x.png'};
+          this.logoScharffx1 = {url: './images/scharff_logo@1x.png'};
+          this.subtitle = 'Carga Doméstica';
+          this.component_class = 'domestica';
+          this.styleObjectLine = {
+            fontSize: '1.5rem',
+            lineHeight: '1.6rem',
+            fontFamily: 'Carnas-Medium'
+          };
+          break;
+        case 'almacenes':
+            this.borderActual = 'solid 0.2rem #ff535a';
+            this.logoScharffx2 = {url: './images/scharff_logo@2x.png'};
+            this.logoScharffx1 = {url: './images/scharff_logo@1x.png'};
+            this.subtitle = 'Almacén';
+            this.component_class = 'almacenes';
+            this.styleObjectLine = {
+              fontSize: '1.8rem',
+              lineHeight: '2rem',
+              fontFamily: 'Carnas-Medium',
+              paddingTop: '7px'
+            };
+            break;
+        case 'aduanas':
+            this.borderActual = 'solid 0.2rem #ff535a';
+            this.logoScharffx2 = {url: './images/scharff_logo@2x.png'};
+            this.logoScharffx1 = {url: './images/scharff_logo@1x.png'};
+            this.subtitle = 'Aduanas';
+            this.component_class = 'aduanas';
+            this.styleObjectLine = {
+              fontSize: '1.8rem',
+              lineHeight: '2rem',
+              fontFamily: 'Carnas-Medium',
+              paddingTop: '7px'
+            };
+            break;
+        case 'carga':
+          this.borderActual = 'solid 0.2rem #ff535a';
+          this.logoScharffx2 = {url: './images/scharff_logo@2x.png'};
+          this.logoScharffx1 = {url: './images/scharff_logo@1x.png'};
+          this.subtitle = 'Carga Internacional';
+          this.component_class = 'aduanas';
+          this.styleObjectLine = {
+            fontSize: '1.5rem',
+            lineHeight: '1.6rem',
+          };
+          break;
+        case 'distribucion':
+          this.borderActual = 'solid 0.2rem #ff535a';
+          this.logoScharffx2 = {url: './images/scharff_logo@2x.png'};
+          this.logoScharffx1 = {url: './images/scharff_logo@1x.png'};
+          this.subtitle = 'Distribución';
+          this.component_class = 'distribucion';
+          this.styleObjectLine = {
+            fontSize: '1.8rem',
+            lineHeight: '2rem',
+            fontFamily: 'Carnas-Medium',
+            paddingTop: '7px'
+          };
+          break;
+        case 'empresa':
+          this.borderActual = 'solid 0.2rem #ff535a';
+          this.logoScharffx2 = {url: './images/scharff_logo@2x.png'};
+          this.logoScharffx1 = {url: './images/scharff_logo@1x.png'};
+          this.subtitle = '<small>Para</small> Empresas';
+          this.component_class = 'empresa';
+          this.styleObjectLine = {
+            fontSize: '1.7rem',
+            lineHeight: '1.5rem',
+            fontFamily: 'Carnas-Medium',
+          };
+          break;
+        case 'para-ti':
+          this.borderActual = 'solid 0.2rem #ff535a';
+          this.logoScharffx2 = {url: './images/scharff_logo@2x.png'};
+          this.logoScharffx1 = {url: './images/scharff_logo@1x.png'};
+          this.subtitle = '<small>Para</small> Personas';
+          this.component_class = 'empresa';
+          this.styleObjectLine = {
+            fontSize: '1.7rem',
+            lineHeight: '1.5rem',
+            fontFamily: 'Carnas-Medium',
+          };
+          break;
+        case 'scharff-stop':
+          this.borderActual = 'solid 0.2rem #ff535a';
+          this.logoScharffx2 = {url: './images/scharff_logo@2x.png'};
+          this.logoScharffx1 = {url: './images/scharff_logo@1x.png'};
+          this.subtitle = 'Stop';
+          this.component_class = 'stop';
+          this.styleObjectLine = {
+            fontSize: '1.8rem',
+            lineHeight: '2rem',
+            fontFamily: 'Carnas-Medium',
+            paddingTop: '7px'
+          };
+          break;
+
+        case 'lab':
+          this.borderActual = 'solid 0.2rem #ff535a';
+          this.logoScharffx2 = {url: './images/scharff_logo@2x.png'};
+          this.logoScharffx1 = {url: './images/scharff_logo@1x.png'};
+          this.subtitle = 'Lab';
+          this.component_class = 'lab';
+          this.styleObjectLine = {
+            fontSize: '2rem',
+            lineHeight: '1.5rem',
+            fontFamily: 'Carnas-Medium',
+            paddingTop: '13px'
+          };
+          break;
+        case 'home':
+          this.borderActual = 'solid 0.2rem #ff535a';
+          this.logoScharffx2 = {url: './images/scharff_logo@2x.png'};
+          this.logoScharffx1 = {url: './images/scharff_logo@1x.png'};
+          this.subtitle = 'Más de 30 años diseñando logistica';
+          this.component_class = '';
+          this.styleObjectLine = {
+            fontSize: '0.9rem',
+            lineHeight: '1.2rem',
+            fontFamily: 'Carnas-Regular'
+          };
+          break;
+        case undefined||'complaints-book':
+          this.borderActual = 'solid 0.2rem #ff535a';
+          this.logoScharffx2 = {url: './images/scharff_logo@2x.png'};
+          this.logoScharffx1 = {url: './images/scharff_logo@1x.png'};
+          this.subtitle = 'Más de 30 años diseñando logistica';
+          this.component_class = '';
+          this.styleObjectLine = {
+            fontSize: '0.9rem',
+            lineHeight: '1.2rem',
+            fontFamily: 'Carnas-Regular'
+          };
+          break;
+      }
+
+
+    },
+    showTracking: function () {
+      this.trackingOnline = true
+      this.drawer = false
+      console.log('tracking Online')
+      // this.trackingOnline()
+    },
+    showOpenLogin: function () {
+      console.log("que pasa");
+
+      this.openLogin = true
+      this.drawer = false
+    },
+    loadOpenLogin: function (type) {
+
+      var vm  =this;
+      switch (type) {
+        case 'login':
+          this.openLogin = true;
+          this.$store.commit('setStateLogin', true);
+          break;
+        case 'register':
+          //this.$scrollTo('#menu-home',1000)
+          vm.openRegister = true;
+          this.$store.commit('setStateHeaderFixed', false)
+          //this.$store.commit('setStateRegister', false);
+          break;
+      }
+
+
+    },
+    closeDraweL:function (el) {
+      switch(el) {
+        case 'Login':
+          this.openLogin = true
+          break
+        case 'DR':
+          this.openRegister = true
+          break
+      }
+      this.drawer = false
+    },
+    remAccount: function () {
+      this.rememberAccount = true
+    },
+    closeLoginModal:function () {
+      this.openLogin = false
+      this.rememberAccount = false
+      this.$store.commit('setStateLogin', false);
+    },
+    closeLogin:function () {
+      this.openLogin = false;
+      this.rememberAccount = false;
+      this.$store.commit('setStateRegister', true);
+      this.$store.commit('setStateHeaderFixed', false)
+      this.$store.commit('setStateLogin', false);
+    },
+    closeTracking: function (){
+      this.$store.commit('setStateTracking', false);
+      this.trackingOnline = false;
+      window.location.hash = '';
+    },
+    getWindowWidth(event) {
+      this.windowWidth = document.documentElement.clientWidth
+    },
+    toGrowCompany: function () {
+      this.$scrollTo('#formGrow',1000)
+      this.drawer = false
+      this.closeItem()
+      //Aqui debemos hacer que se valide el path, cuando te mande a otro menu
+    },
+    closeItem: function () {
+      this.activekey = null
+      this.itemactive = false
+      this.isActive = null
+    },
+    openMenu: function (el,i) {
+
+      this.openCount = 1
+      this.htmlHeight = document.querySelector('body').offsetHeight - 100
+      if(this.isActive == el.name){
+        this.isActive = null
+      } else {
+        this.isActive = el.name
+      }
+      if(i < 2){
+        if(this.activekey == null){
+          this.activekey = i
+          this.itemactive = true
+          this.subMenu = el.items
+        } else if (this.activekey == i){
+          // this.itemactive = false
+
+          ///this.activekey = null
+        } else {
+            this.subMenu = el.items
+            this.activekey = i
+        }
+      } else {
+        this.itemactive = false
+        this.activekey = null
+      }
+      console.log(this.isActive);
+    },
+    showSubMenu: function (el, i) {
+      console.log(el)
+      console.log(i)
+      if(this.openCount == 1){
+        this.activekey = null
+        this.itemactive = false
+      }
+      if(i == 3) {
+        this.showTracking()
+      }
+      // if(i == 4) {
+      //   var elementExists = document.getElementById("formGrow");
+      //   if(elementExists){
+      //     this.$scrollTo('#formGrow',1000)
+      //
+      //   }else{
+      //     this.$scrollTo('.footer',1000)
+      //   }
+      // }
+      if(i == 2) {
+        ///this.$scrollTo('#formGrow',1000)
+        this.gotoPage('lab');
+      }
+      if(i == 4) {
+        ///this.$scrollTo('#formGrow',1000)
+        this.gotoPage('preguntas-frecuentes');
+      }
+      this.htmlHeight = document.querySelector('body').offsetHeight - 100
+      if(this.isActive == el.name){
+        this.isActive = null
+      } else {
+        this.isActive = el.name
+      }
+      if(i < 2){
+        if(this.activekey == null){
+          this.activekey = i
+          this.itemactive = true
+          this.subMenu = el.items
+        } else if (this.activekey == i){
+          this.itemactive = false
+          this.activekey = null
+        } else {
+            this.subMenu = el.items
+            this.activekey = i
+        }
+      } else {
+        this.itemactive = false
+        this.activekey = null
+      }
+    }
+  },
+  components: {
+    'login-user': loginUser,
+    'register-user': registerUser,
+    'tracking-online': trackingOnline,
+    'terminos': terminos,
+  }
+}
+</script>
+
+<style lang="scss">
+@import "../../scss/vars.scss";
+.holi{
+  position: absolute;
+  width: 800px;
+  height: 100vh;
+  background: red;
+}
+.w10hidden{
+  width: 10rem;
+  overflow: hidden;
+
+}
+
+#VueCarousel-slide .container{
+  padding-top: 0;
+}
+#menu-home {
+    background: #f6f6f6;
+}
+#menu-home .toolbar .btn-login-menu,.toolbar .btn-reg-menu{
+  position: relative;
+      height: 36px;
+      font-size: 12px;
+      width: 112px;
+      line-height: 36px;
+      margin-bottom: 10px;
+}
+.container-logo{
+  cursor: pointer;
+}
+.container-logo small{
+  font-size: 60%;
+}
+.item-menu .item-menu-icon-w img {
+    width: auto;
+    height: auto;
+}
+.item-menu .item-menu-icon-w{
+  height: 71px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding-bottom: 0px;
+}
+.item-menu .item-menu-icon-w svg{
+  height: 71px;
+}
+.item-menu .item-menu-icon-w svg path {
+    fill: #6f6f6f;
+
+}
+.item-menu .item-router-link:hover svg path,
+.item-menu .item-router-link:hover svg circle ,
+.item-menu .item-router-link:hover svg .st1 ,
+.item-menu .item-router-link:hover svg rect {
+    fill: $primary-color;
+}
+.item-menu .item-router-link:hover span {
+    color: $primary-color;
+}
+.item-menu.px1 {
+    min-width: 124px;
+}
+.menu--cotizador img {
+    height: auto;
+    width: auto;
+}
+.menu--cotizador span{
+  left: 0;
+}
+.item-menu.menu--cotizador .item-menu-icon-w{
+width: 78px;
+padding-top: 0;
+padding-left: 14px;
+}
+.toolbar__items .align-center{
+  display: flex;
+}
+
+.create-user.navigation-drawer--absolute {
+  background-color: #1f1f1f!important;
+  position: fixed;
+  padding-bottom: 0;
+  display: flex;
+}
+.create-user.navigation-drawer--absolute>div{
+    height: auto;
+    width: 100%;
+    display: flex;
+
+  }
+  .create-user.navigation-drawer--absolute>.register_success{
+  align-items: center;
+}
+
+@media only screen and (max-width: 1120px) {
+  #menu-home .btn-reg-menu {
+      display: none;
+  }
+  font-size: 13px;
+}
+.toolbar__items svg{
+  transform: rotate(90deg);
+  transition:all .2s ease;
+}
+.toolbar__items .parentOp svg{
+  transform: rotate(0);
+}
+.toolbar__items>.align-center{
+  position: relative;
+  top:1px;
+}
+.toolbar__items>.btn:nth-child(1) .btn__content,
+.toolbar__items>.btn:nth-child(2) .btn__content{
+    padding: 0 17px;
+}
+.toolbar .btn-reg-menu-accede {
+    width: auto;
+}
+.btn-reg-menu-accede{
+  position: relative;
+  top: -3px;
+  margin-left: 11px;
+  .a-user-img+div{
+    text-align: left;
+    padding-left: 5px;
+    font-family: Carnas-Light;
+    font-size: 10px;
+    text-transform: uppercase;
+    line-height: 1.1;
+    padding-right: 8px;
+    padding-top: 1px;
+  }
+  .a-user-name{
+    display: block;
+    font-family: Carnas-Medium;
+    font-size: 13px;
+    text-transform: capitalize;
+  }
+  .a-user-img {
+    width: 28px;
+    height: 29px;
+  }
+  .a-user-next {
+    width: 15px;
+    height: 9px;
+  }
+
+}
+.toolbar .btn-reg-menu {
+    line-height: 38px;
+}
+@media only screen and (max-width: 1300px) {
+  #menu-home .toolbar .btn-login-menu, .toolbar .btn-reg-menu {
+      margin: 0px 5px;
+  }
+}
+
+@media only screen and (max-width: 1270px) {
+  button.btn-menu.btn .btn__content {
+      padding: 0px 5px;
+      font-size: 13px;
+  }
+  #menu-home .toolbar .btn-login-menu, .toolbar .btn-reg-menu {
+      margin: 0px 2px;
+  }
+  .toolbar__items > .align-center {
+    top: -1px;
+    padding-left: 3px;
+  }
+}
+</style>

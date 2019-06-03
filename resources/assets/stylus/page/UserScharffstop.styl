@@ -1,0 +1,234 @@
+.title-pink
+  font-size 6rem
+  color c-text-title-pink
+  display flex
+  align-items baseline
+  &.aux
+    img
+      width 2.3rem
+
+.seccion-entrega-facil
+  h4
+    font-size 2rem
+  p
+    font-size 1.2rem
+
+.image-base
+  display flex
+  align-items center
+  img
+    width 100%
+
+@media screen and (max-width: 600px)
+  .order
+    &Two
+      order 2
+    &One
+      order 1
+  .text-center-md
+    text-align center
+
+.send.aux
+  font-size 3.4rem
+
+@media screen and (max-width: 425px)
+  .flex-items
+    flex-direction column
+    align-items center
+
+@media screen and (max-width: 375px)
+  .seccion-entrega-facil
+    padding 1rem 2rem
+  .easy-btn
+    text-align center
+
+@media screen and (max-width: 425px)
+  .title-pink.aux
+    font-size 4.5rem
+    img
+      width 1.5rem
+  .lockers-responsive
+    .relative-box
+      .text-absolute
+          margin-left -3rem!important
+          &.tree
+            margin-right -3rem!important
+
+.auxLeftInfo
+  .image-base
+    justify-content: center!important
+
+.imagen-secure
+  display flex
+  img
+    width 100%
+    max-width 20rem!important
+
+.col-one-secure
+  display flex
+  flex-direction column
+  max-width 25rem
+  h4
+    font-size 1.7rem
+  p
+    font-size 1.17rem
+
+.locker-container
+  display flex
+  flex-direction column
+  text-align center
+  h3
+    font-size 3rem
+  p
+    font-size 1.4rem
+  a
+    font-size 1.2rem
+    color c-text
+
+.locker-img-container
+  .lockers
+    display flex
+    align-items center
+    flex-direction column
+    .items
+      display flex
+      justify-content space-around
+      align-items flex-end
+      z-index 1
+      margin 0 0 -1.6rem 0
+      .relative-box
+        position relative
+      .text-absolute
+        position absolute
+        margin-left -6.3rem
+        top -2rem
+        z-index 2
+        &.two
+          margin-left -3rem
+        &.rigtht
+          right 0
+          margin-right: -5.4rem
+          margin-left: 0
+      .img
+        width 14rem
+      .center
+        margin 0 4rem
+      .more-icon
+        width 3.5rem
+        position absolute
+        margin-left 0
+        left: -30px
+        margin-top: -10px
+        &.two
+          left: 28px
+
+        &.tree
+          right 0
+
+
+    .img-base
+      width 100%
+      max-width 60rem
+      z-index 0
+
+.VueCarousel-slide
+  display flex
+  align-items center
+
+.lockers-responsive
+  width 100%
+  display flex
+  justify-content center
+  padding 6rem 0 0 0
+  .relative-box
+    position relative
+    .text-absolute
+      position absolute
+      top -6rem
+      margin-left -5.8rem
+      z-index 2
+      &.tree
+        margin-right -5rem
+        right: 0
+    .more-icon
+      position absolute
+      margin-left -2rem
+      &.tree
+        margin-right -.4rem
+        right 0
+
+.form-inputs
+  display flex
+  flex-direction column
+  align-items center
+  max-width: 31rem
+  font-size: 12px
+  .input
+    margin-bottom .5rem
+    width 100%
+    border solid .1rem white
+    padding 1rem
+    outline none
+    &::placeholder
+      color white
+  .btn-crear
+    width 9rem
+
+.info-register
+  max-width 24rem
+  .title-register
+    font-size 2.2rem
+  .more-info
+    font-size 1.2rem
+
+@media screen and (min-width: 1024px)
+  .info-register
+    max-width 27rem
+    // background: red
+    .title-register
+      font-size 2.5rem
+    .more-info
+      font-size 1.5rem
+
+@media screen and (max-width: 599px)
+  .info-register
+    text-align center
+
+.bg-map-img
+  background-image url('/images/bg-map.png')
+  background-size cover
+
+.bg-company-information
+  // background-image url('/images/bg_company.png')
+  // background-size cover
+  background-color black
+
+.c-search-locker
+  display flex
+  max-width 30rem
+  // background red
+  flex-direction column
+  text-align center
+  align-items center
+  .s-input
+    border-bottom solid .1rem black
+    width 90%
+    img
+      width 1.8rem
+      padding-right .5rem
+    input
+      width 80%
+      font-size 2.7rem
+      outline none
+
+@media screen and (max-width: 599px)
+  .c-search-locker
+    .s-input
+      img
+        width 1.8rem
+        padding-right .5rem
+      input
+        width 80%
+        font-size 1.7rem
+        outline none
+        text-align center

@@ -1,0 +1,446 @@
+.menu-back
+  position absolute
+  z-index -1
+  width 100%
+  background #0000007a
+  // height 150vh
+  top 10px
+.l-menu
+  background-color: bg-blue
+
+.container-logo
+  display flex
+  text-decoration none
+  align-items center
+  z-index 3
+
+.sub-menu-principal
+  z-index 9
+  position relative
+  width 100%
+  .items-menu
+    position absolute
+    background-color white
+    margin-top 10px
+    width: 100%
+    display flex
+    justify-content center
+    border-top: 4px solid #f6f6f6 !important;
+
+.fixed-header .sub-menu-principal
+    .items-menu
+      margin-top 0.1rem
+.item-menu
+  cursor pointer
+  display flex
+  flex-direction column
+  align-items center
+  // justify-content flex-end
+  text-align center
+  position relative
+  img
+    width 118px
+    height 61px
+  span
+    width 7rem
+    padding-top .7rem
+    padding-bottom 1rem
+    font-family  Carnas-Light
+    font-size .8rem
+
+.item-router-link
+  display flex
+  flex-direction column
+  align-items: center
+  cursor pointer
+  text-decoration none
+  color c-text
+.infoImg
+  height 9rem
+  width auto!important
+
+.menu-wrapper
+  border-top solid .2rem c-principal
+  font-family Carnas-Medium !important
+
+.menu-wrapper.scharff-club
+  background: #000000
+  border-top: solid 0.2rem #c59849
+  *
+    color:#fff
+  .container-logo
+    top: -10px;
+    padding-left: 22px;
+    position: relative;
+
+.btn-active
+  background-color c-btn-active!important
+  color white!important
+
+
+.btn
+  font-family Carnas-Bold
+.btn--large
+  height: 56px
+  font-size: 20px
+  .btn__content
+    padding: 15px 36px
+    line-height: 1.6rem
+  &.gi-16 .btn__content
+    padding: 9px 36px;
+
+button.btn-menu.btn
+  &:hover
+    background-color: none!important
+  .btn__content:before
+    border-radius none
+    color c-text-title-pink
+    content ""
+    position absolute
+    left 35%
+    top 43px
+    height .3rem;
+    opacity 1
+    -webkit-transition: .3s cubic-bezier(.25,.8,.5,1);
+    transition: .3s cubic-bezier(.25,.8,.5,1);
+    width: 30%;
+
+
+.toolbar__items:hover .parentOp-dom.btn-menu.btn .btn__content:before
+  background:transparent
+.parentOp-dom.btn-menu.btn .btn__content:before,.toolbar__items:hover .parentOp-dom.btn-menu.btn:hover .btn__content:before
+  background-color: c-text-title-pink;
+
+.parentOp-dom~button.btn-menu.btn.active .btn__content:before
+  background:transparent
+
+.parentOp-dom~button.btn-menu.btn.active .btn__content:before
+  background:transparent
+
+.activekey .parentOp-dom.btn-menu.btn .btn__content:before
+  background:transparent
+
+.activekey .parentOp.btn-menu.btn .btn__content:before
+  background:c-text-title-pink
+
+button.btn-menu.btn .btn__content i
+  margin-right: -11px;
+  margin-left: -3px;
+  line-height: 10px;
+
+button.btn-menu.btn
+  .btn__content
+    padding 0px 8px
+
+button.btn-menu.btn.active
+  .btn__content:before
+    content ""
+    border-radius none
+    color c-text-title-pink
+    background-color c-text-title-pink
+    position absolute
+    left 35%
+    top 43px
+    height .3rem;
+    opacity 1
+    width 30%
+
+.drawer-menu
+  font-family  Carnas-Light
+  color c-text
+
+.drawer-title
+  font-family Carnas-Medium
+  color c-text
+
+.create-user
+  background-color black-light!important
+.type-account
+  text-align center
+
+.btn-create
+  font-size .8rem
+  line-height .8rem
+  // &.person
+  &.company
+    color white
+
+.input-create
+  label
+    color white-tenue!important
+  .input-group__input
+    input
+      color white!important
+    .material-icons.icon.icon--selection-control
+      color c-principal
+  .input-group__details::before
+    background-color: white-tenue!important
+
+.register-checkbox
+  display flex
+  span
+    a
+      color white
+      // font-family Carnas-Medium
+.register-form
+  div
+    .create
+      line-height 1
+.register-social
+  display flex
+  align-items center
+  justify-content space-between
+  margin-bottom: 11px;
+.register-social.hidden
+  display:none
+
+//.register-social~.register-btn-create button
+//  margin-bottom:-20px
+
+//.register-social.hidden~.register-btn-create button
+//  margin-bottom:0
+
+.register-btn-create
+  display flex
+  justify-content center
+  .btn--large
+    height: 55px;
+    .btn__content
+      padding: 13px 31px;
+      line-height: 1.4rem;
+      font-size: 17px;
+
+.login-options
+  display flex
+  align-items: center
+  justify-content: space-between
+  margin-bottom: 15px
+  button
+    line-height: 44px
+    font-size: 17px;
+    width: 50%
+    color: #fff
+    text-decoration: none
+    border-radius: 50px
+    border:1px solid c-text-title-pink
+    background: #fff
+    color:#333
+  button:focus
+    outline:none
+  .login-empresa
+    border-top-right-radius: 0
+    border-bottom-right-radius: 0
+  .login-personas
+    border-top-left-radius: 0
+    border-bottom-left-radius: 0
+  .active
+    background: c-text-title-pink
+    color: #fff
+.social-btn
+  display flex
+  align-items center
+  border-radius .2rem
+  span
+    padding-left: .4rem
+    margin-left: .4rem
+
+
+
+.social-img
+  width 1.2rem
+
+.google
+  color c-text
+  background white
+  padding .8rem
+  border solid .05rem cborder-3
+  span
+    border-left: solid .1rem cborder-3
+
+.facebook
+  color: white
+  background: facebook
+  padding .6rem .7rem
+  i
+    display flex
+  span
+    border-left: solid .1rem white
+
+.user-anonimous
+  display flex
+  align-items center
+  justify-content center
+  .text
+    padding-left .5rem
+    span
+      font-size .9rem
+    h4
+      font-size 1.4rem
+      font-family Carnas-Medium
+      font-weight 400
+  img
+    width 2.7rem
+
+.dialog__content__active
+  background rgba(21, 21, 21, 0.4)
+
+.login-style
+  z-index 2
+  width 370px
+  font-family Carnas-Regular
+  text-align center
+  .header
+    h4
+      font-family Carnas-Bold
+      font-size: 1.7rem
+      font-weight: 500;
+  .inputs
+    input
+      border solid .1rem c-text
+      padding .7rem 1.4rem
+      width 100%
+      outline 0
+      margin .5rem 0
+  .extra-links
+    p
+      cursor pointer
+      margin-bottom: 6px;
+      &:hover
+        text-decoration underline
+  .close
+    width 100%
+    display flex
+    justify-content flex-end
+    position absolute
+    top 0
+    left 0px
+    padding-right 1rem
+    padding-top 0.7rem
+    i
+      cursor pointer
+.modal-open-login
+  display flex
+  justify-content center
+  z-index 99
+  height 100vh
+  align-items center
+  position relative
+
+.back-modal-active
+  position fixed
+  width 100%
+  height 100%
+  // background rgba(21, 21, 21, 0.4)
+
+.responsive-item
+  text-decoration none
+  color c-text!important
+@media screen and (max-width: 600px)
+  .login-style
+    width 340px
+    padding-right: 30px!important
+    padding-left: 30px!important
+
+@media screen and (max-width: 372px)
+  .login-style
+    .register-social
+      flex-flow row wrap
+      justify-content: center
+      .social-btn.pb-aux
+            margin-bottom 1rem
+
+
+.tr-size
+  width 345px!important
+
+.input-tracking
+  // display flex
+  // align-items center
+  span
+    padding-right 1rem
+    padding-left .5rem
+  .t-select
+    width 100%
+    background #f2f2f2
+    padding .3rem 1rem .4rem
+    -webkit-appearance menulist
+    outline none
+    .t-option
+      width 100%
+      background #f2f2f2
+  .c-items-list
+    background none
+    border .1rem solid
+    border-radius 0
+    padding .5rem 1rem
+    min-height 2.5rem
+    .list-item
+      left 0
+      top 2.4rem
+
+.z-indexTwo
+  z-index 4!important
+
+.t-text-area
+  border solid .1rem #f2f2f2
+  width 100%
+  outline none
+  padding .5rem 1rem
+
+.submenu--border::before
+  border-left  solid .1rem #cccccc
+  content ''
+  height 100%
+  position absolute
+  width 1rem
+  left 0
+  top 0
+
+.menu--cotizador
+  flex-direction row
+  position relative
+  span
+    position relative
+    text-align left
+    left -1.5rem
+    strong
+      text-decoration underline
+  img
+    height 76px
+    width 8.4rem
+
+.scharff-text-title
+  width 8rem
+  margin-left 0.9rem
+  position relative
+  font-size .8rem
+  font-family Carnas-Regular
+  &:before
+    content ''
+    position absolute
+    width .1rem
+    height 3rem
+    background black
+    top -0
+    left -11px
+
+.retina-logox2
+  width 173px
+
+.retina-logox1
+  width 100px
+
+
+
+.terminos-style
+  width 920px
+  max-width 100%
+
+
+.terminos_terminos
+  height calc(100vh - 262px)
+  overflow-y scroll
+  border 1px solid #afafaf
+  padding 18px
+  text-align left
+  padding-left 28px

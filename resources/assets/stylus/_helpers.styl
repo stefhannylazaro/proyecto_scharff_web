@@ -1,0 +1,222 @@
+//buttons
+.temporal
+  color red
+
+.bg-smoke
+  background-color: #fbfbfb
+
+.bg-white
+  background-color: white
+
+.text-underline
+  text-decoration underline
+  cursor pointer
+
+.text-right
+  text-align right
+
+.text-center
+  text-align center
+
+.text-left
+  text-align left
+
+.text-end
+  text-align end
+
+.align-top
+  align-items flex-start
+
+.bold-text
+  font-family Carnas-Bold
+  font-size 2.7rem
+
+.font-bold
+  font-family Carnas-Bold
+  font-weight: 400;
+
+.font-bold-m
+  font-family Carnas-Bold
+  font-weight: 600;
+
+.font-medium
+  font-family Carnas-Medium
+  font-weight: 500;
+
+.font-regular
+  font-family Carnas-Regular
+  font-weight: 400;
+
+.font-light
+  font-family Carnas-Light
+
+.font-black
+  font-family Carnas-Black
+
+.font-extra-light
+  font-family Carnas-Extra-light
+
+.opacity
+  opacity 0
+
+.justify-baseline
+  display flex
+  justify-content baseline
+
+.justify-end
+  display flex
+  justify-content flex-end
+
+.d-align-end
+  display flex
+  align-items end
+
+.d-align-center
+  display flex
+  align-items center
+
+.d-align-start
+  display flex
+  align-items flex-start
+
+.d-justify-center
+  display flex
+  justify-content center
+
+.d-align-between
+  display flex
+  align-items center
+  justify-content space-between
+
+.d-align-around
+  display flex
+  align-items center
+  justify-content space-around
+
+.d-column-justify-center
+  display flex
+  flex-direction column
+  justify-content center
+
+
+.color-pink
+  color c-text-title-pink!important
+
+.color-gray
+  color #bbb9b9
+
+.bg-pink
+  background c-text-title-pink!important
+
+.bg-black-light
+  background-color  black-very-light
+
+.bg-light-white
+  background-color light-white
+
+.bg-admin
+  background-color header-admin!important
+
+.bg-gray-one
+  background-color #f4f4f4!important
+
+.p_relative
+  position relative
+
+.p_absolute
+  position absolute
+  // left 0
+  // top 0
+  width inherit
+
+.btn-next-small
+  .btn__content
+    padding .7rem 2rem
+
+.border-bottom-list
+  border-bottom solid .2rem grey
+
+.flex-row-wrap
+  display flex
+  flex-flow row wrap
+
+@media screen and (max-width: 600px)
+  .order-1
+    order 1
+
+  .order-0
+    order 0
+
+.title-component
+  color c-principal
+  font-size 3rem
+
+.sub-title-component
+  color c-text
+  font-size 1.3rem
+
+.position-absolute
+  position absolute
+
+.position-relative
+  position relative
+
+
+  //animations
+.fade-ex-transition
+  // position abs
+  &-enter-active
+    transition: all .3s ease
+
+  &-leave-active
+    transition: all .8s cubic-bezier(1.0, 0.5, 0.8, 1.0)
+
+  &-enter
+    transform: translateX(5rem)
+    opacity: 0
+  // &-enter-to
+  //   transform: translateX(0)
+
+  // &-leave
+  //   transform: translateX(0)
+
+  &-leave-to
+    transform: translateX(-5rem)
+    opacity: 0
+
+
+.pink
+    background-color: c-text-title-pink!important;
+    border-color: c-text-title-pink!important;
+
+.el--block
+  display block
+
+
+@media screen and (max-width: 974px)
+  .list--group .list__tile
+    padding-left: 35px;
+
+
+
+
+//MAS CSS
+
+.title-general.send
+  font-size: 4.3rem;
+  line-height: 1.19;
+
+.container-left div.d-flex span.subtitle-general
+  font-size: 27px
+.btn-cover-banner
+  strong
+    font-family Carnas-Bold
+
+@media screen and (max-width: 1210px)
+  .container-left div.d-flex span.subtitle-general br,
+  .title-general br
+    display none
+@media screen and (max-width: 1140px)
+  .bg-slotTree .cover-col .send.white--text,
+  .container-left div.d-flex span.white--text
+    text-shadow: 0px 0px 6px rgba(0, 0, 0, 0.38);

@@ -1,0 +1,298 @@
+.ActiveItemAdmin
+  border-left solid .4rem c-text-title-pink
+
+.admin-user-text
+  text-align left
+  display flex
+  flex-direction column
+  font-size .8rem
+  font-family Carnas-Light
+  .a-user-name
+    font-size 1rem
+    font-family Carnas-Bold
+
+.a-user-img
+  width 37px
+  height 37px
+
+.stepper-width-head
+  width 500px
+  margin 0 auto
+
+.stepper-control
+  .stepper__step__step
+    background-color white!important
+    color black-transparent!important
+    font-weight bold
+    border solid .1rem black-transparent!important
+  &.stepper__step--active
+    .stepper__step__step
+      // background-color white!important
+      color c-text-title-pink!important
+      // font-weight bold
+      border solid .1rem c-text-title-pink!important
+  &.stepper__step--complete
+    span
+      i
+        color black-transparent!important
+
+.section-one-stepper
+  h2
+    font-size 1.7rem
+  span
+    font-size .95rem
+  .info-stepper
+    display flex
+    justify-content flex-end
+    align-items center
+    font-size .9rem
+    margin-top -1.5rem
+    a
+      color black-light
+      margin-top .2rem
+      margin-left .3rem
+
+.imagen-container-stepper
+  display flex
+  align-items center
+  justify-content center
+  // background red
+  height 15rem
+
+.size-lockers-container
+  background white
+  border solid .1rem light-white
+  cursor pointer
+  position relative
+  // &:nth-child(2)
+  //   border solid c-text
+  //   border-width .1rem 0rem
+
+.size-lockers-title
+  span
+    color c-text
+    font-size .9rem
+
+.lockerActive
+  border solid .1rem c-btn-active
+
+.locker-checked
+  position absolute
+  top 0.5rem
+  left .5rem
+  color c-btn-active!important
+
+@media screen and (max-width: 500px)
+  .align-elements-reservation
+    display flex
+    width 100%
+  .info-stepper
+    margin-top 0!important
+    margin-bottom 1rem
+
+@media screen and (max-width: 390px)
+  .nopadding-w390
+    padding 0!important
+
+.wrapper-step-two
+  position relative
+  margin 1rem auto
+  display flex
+  justify-content center
+
+.img-step-two
+  position absolute
+  left -3rem
+  z-index: 0
+  bottom -21px
+
+@media screen and (max-width: 460px)
+  .img-step-two
+    // position absolute
+    left -2.4rem
+    // z-index 0
+    bottom -19px
+    width 24rem
+
+.min-width-step-two
+  padding 4rem 2rem 3rem
+  position relative
+  border c-btn-active solid .1rem
+  background white
+
+.text-step-two
+  // position absolute
+  z-index 1
+  input
+    border-bottom solid 1px
+    margin-bottom 1.2rem
+    padding-left 1rem
+    // text-align center
+    width 18rem
+    outline none
+
+@media screen and (max-width: 460px)
+  .min-width-step-two
+    min-width 19rem
+    input
+      width 100%
+  // .img-step-two
+  //   position absolute
+  //   top -5.5rem
+  //   left -9rem
+
+.wrapper-step-tree
+  width 17rem
+  margin 0 auto
+  border-bottom solid 1px c-text
+  input
+    width 15rem
+
+.wrapper-info-finish
+  border: solid 0.1rem c-text-title-pink;
+  width: 30rem;
+  text-align: center;
+  padding: 2.5rem 5rem;
+  h3
+    font-size 1.5rem
+  p
+    font-size .85rem
+
+.drawer-admin-border
+  border-left solid .1rem c-principal
+
+.monto-info
+  color c-principal
+.select-item-style
+  .pagination__item--active.primary
+    background-color #828282 !important
+    border-color #828282 !important
+    outline none!important
+
+.input-date-reservation
+  .input-group__input
+    border solid .1rem black
+    .input-group__prepend-icon
+      order 2
+    input
+      order 1
+      text-align center
+  .input-group__details::before
+    height 0
+
+.input-date-reservation.input-group--focused
+  label
+    display none!important
+
+.labelDisplayNone
+  label
+    display none
+
+.menu__activator
+  .input-date-reservation.primary--text
+    color black!important
+
+.icon-close-modal
+  width 1.5rem
+  right 10px
+  position absolute
+  top 10px
+
+.back-modal-active-admin
+  width 100vw
+  height 100vh
+  top 0
+  z-index 3
+  position absolute
+  background rgba(0, 0, 0, 0.4)
+
+.error-msg-email
+  font-size .8rem
+  color c-principal
+  display: flex;
+  justify-content: center;
+
+.icon-exit-p0
+  min-width 4rem
+  .btn__content
+    padding 0!important
+
+@media screen and (max-width: 599px)
+  .icon-user-p0
+    min-width 4rem
+
+.smallLogo
+  width 7rem
+  overflow hidden
+
+.checkox-space-empty
+  // color red
+  .input-group__details
+    min-height 15px
+
+.more-info-send-package
+  font-size 10px
+  padding-bottom .3rem
+  img
+    width 14px
+
+.container-monto-pagar
+  .icon-monto
+    width 60px
+    height 60px
+  .text-monto
+    .title-monto
+      font-size 10px
+
+.radio-donde-pagar
+  color red
+  div
+    div
+      label
+        font-size 12px
+        line-height 1.2
+        white-space normal
+
+.send-package-multiselect
+  .multiselect__tags
+    .multiselect__input
+      border none!important
+
+.text-ten-px
+  font-size 12px
+
+.info-time-delivery
+  img
+    width 60px
+    height 40px
+  p
+    width 10rem
+    font-size 12px
+
+.align-elements-end
+  display flex
+  flex-direction column
+  align-items flex-end
+
+.input-payment-methods
+  display flex
+  flex-flow row wrap
+  justify-content space-between
+  input
+    border solid .1rem black
+    padding .2rem
+    margin-top .5rem
+    -moz-appearance textfield
+
+.container-pay-icons
+  .pay-icon
+    display flex
+    &.selected
+      img
+        border solid #ff5d6c .2rem
+        border-radius 0.4rem
+    img
+      height 30px
+
+input[type=number]
+  -moz-appearance textfield

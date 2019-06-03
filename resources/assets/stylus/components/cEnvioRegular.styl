@@ -1,0 +1,386 @@
+.line-left
+  position relative
+  &:after
+    content:''
+    display:block
+    position:absolute
+    height:100%
+    left:0
+    top:0
+    border-left:1px solid #cccccc
+
+.line-bottom
+  border-bottom:1px solid #cccccc
+  padding-bottom: 26px;
+  margin-bottom: 23px;
+
+.regular-step1
+  .multiselect
+    width: 350px
+  .min-width-step-two
+    padding-left: 3rem;
+    padding-right: 3rem;
+  .line-left:after
+    left: -42px;
+
+.regular-block
+  .multiselect
+    margin-bottom: 10px;
+
+  .text-step-one input
+    border-radius:0
+
+  .multiselect--active
+    .multiselect__select
+      z-index:1
+
+  .input--modifier .multiselect__tags
+    border:none
+    padding-left:0
+    padding-right:0
+
+
+  .multiselect__input,.multiselect__tags
+    background:transparent
+
+  .input--peso
+    width:131px
+    text-align center
+    margin-left:auto
+    margin-right:auto
+    padding-top 0
+    .input-group__selections__comma
+      color:c-principal !important
+      font-size: 17px;
+      font-weight: 600;
+      margin: auto;
+      padding-left: 17px;
+
+
+
+.cuanto-mide
+  display: flex
+  width: 170px;
+  text-align: center;
+  margin: auto;
+
+  input
+    text-align: center;
+    padding-left: 5px;
+
+.regular-step2
+  strong
+    font-size: 16px;
+    img
+      vertical-align: middle;
+      position: relative;
+      top: -1px;
+      padding-right: 3px;
+
+.centrado-total
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+.regular-step2
+  .centrado-total>div
+    width: 100%;
+  .ep-form-package
+    padding-left 2em
+    padding-right 2em
+  .white-bg
+    padding-top 4em
+    padding-bottom 4em
+  .text-step-one input
+    font-size: 17px;
+    text-align: center;
+    padding-left: 0;
+    color:c-principal
+    font-weight: 600;
+  .costo-total
+    color:c-principal
+    font-size: 21px
+    font-weight: 700
+
+.regular-step1m3
+  .line-bottom_em
+    padding-bottom: 8px
+    &:before
+      content ''
+      display block
+      position absolute
+      left: 34px;
+      bottom: 0;
+      width: calc(100% - 64px);
+      border-bottom:1px solid #cccccc
+    input
+      width 250px
+      max-width 100%
+  &.regular-step1
+      .min-width-step-two
+        padding-bottom 0
+  .min-width-step-two
+    position static
+  .layout.wrap
+    position relative
+
+    &:nth-child(2)
+      padding-bottom 23px
+      .line-bottom_em
+        &:before
+          border-bottom:2px solid #333
+
+    &+.layout.wrap
+      width: 100%;
+      .min-width-step-two
+        padding-top 20px
+    &:nth-child(3)
+      padding-bottom: 22px;
+      .line-bottom_em
+        &:before
+          content none
+  .subheading
+    display: block;
+  .display-1
+    font-size: 18px !important;
+    font-weight: 500;
+    margin-top: 7px;
+    display: block;
+    font-family: 'Carnas-Bold';
+
+.cuanto-mideb
+  display: flex;
+  flex-wrap: wrap;
+  width: 188px;
+  margin:auto;
+  text-align: right;
+  label
+    vertical-align: middle;
+    padding-top: 10px;
+  &::after,&::before
+    content: ""
+    display: table
+  &::after
+    clear: both;
+
+
+.regular-step2.regular-step2b .text-step-one input
+  width: 33%;
+  margin-bottom: 0.4rem;
+  border-color: #9e9e9e;
+
+.regular-step2b.regular-block .input--peso
+  clear:both
+
+
+.regular-step2.regular-step2b strong img
+    max-width: 51px;
+
+div.text-step-one>strong>img+span
+  display: inline-block;
+  vertical-align: middle;
+  text-align: left;
+  padding-left: 5px;
+
+div.text-step-one>strong
+  font-size: 17px;
+
+.dos-btns
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  span
+    display: block;
+    width: 68px;
+    border: 1px solid #ff535a;
+    color: #bbbbbb;
+    font-size: 16px;
+    font-weight: 600;
+    padding: 8px 0;
+    cursor:pointer;
+    &.dos-btns--active
+      color:#FFFFFF
+      background-color:#ff535a
+    &:first-child
+      border-top-left-radius:13px;
+      border-bottom-left-radius:13px;
+      padding-left: 6px;
+    &:last-child
+      border-top-right-radius:13px;
+      border-bottom-right-radius:13px;
+      padding-right: 6px;
+.white-bgb
+  background:#fff
+  &>div
+    padding-top: 4em;
+    padding-bottom: 4em;
+    &:nth-child(3)
+      background:#fcfcfc
+
+
+@media screen and (max-width: 950px)
+  .regular-step2 .ep-form-package
+    padding-left: 0.7em;
+    padding-right: 0.7em;
+
+@media screen and (max-width: 600px)
+  .line-left
+    &:after
+      border-left:none
+  .cuanto-mideb
+    text-align: left
+  .ep-form-package div input.short-input
+    width: 100% !important
+  .regular-step1m3 .line-bottom_em input
+    width: 100% !important
+
+@media screen and (max-width: 740px)
+  .white-bgb.layout.row
+    background: #fff;
+    &>div
+      width:100%
+      flex-basis: 100%;
+      max-width: 100%;
+  .envio-regular__step1--img~br
+    display none
+  .white-bgb>div
+    padding-top: 1.5rem;
+    padding-bottom: 1rem;
+  div.text-step-one>strong
+    margin-bottom: 20px;
+  div.text-step-one>strong+br
+    display none
+
+  .white-bgb>div:nth-child(3) strong
+    margin-bottom 0
+  .regular-block .input--peso
+    padding-top: 0;
+
+
+.regular-step1 .text-step-one input+input
+  padding-top 12px
+.regular-step1 .text-step-one input+input+input
+  padding-top 7px
+
+.short-input
+  padding-top: 7px;
+  display: block;
+  width: 220px;
+  max-width: 100%;
+  position: relative;
+  i
+    font-size: 20px;
+  .tooltip
+    position: absolute;
+    right: 3px;
+    top: 5px;
+    cursor pointer
+.ep-form-package div input.short-input
+    width: 220px;
+    display: block;
+    max-width: 100%;
+span.short-input
+    padding-bottom: 36px;
+
+
+.destino-envio__textarea
+    height: 55px;
+    background: #fafafa;
+    max-width: 100%;
+    padding: 12px 17px;
+    margin-top: 16px;
+    outline: none;
+    border: 1px solid #fafafa;
+    &:focus
+      border-color:#e8e8e8;
+
+
+.ep-form-package div input.numero-interior-piso
+  margin-bottom: 0.5rem;
+
+.origen-envio__textarea
+    height: 55px;
+    background: #fafafa;
+    max-width: 100%;
+    padding: 12px 17px;
+    margin-top: 16px;
+    outline: none;
+    border: 1px solid #fafafa;
+    &:focus
+      border-color:#e8e8e8;
+
+.regular-step1 div.text-step-one>strong
+  font-size: 15px;
+
+
+.primary-color
+  color c-principal
+
+
+
+
+.tarifa-loading-screen{
+  position: absolute;
+  top: 0;
+  left: 0;
+  background: rgba(255, 255, 255, 0.9);
+  width: 100%;
+  height: 100%;
+  align-items: center;
+  justify-content: center;
+  display: none;
+}
+.tarifa-loading-screen-active.tarifa-loading-screen{
+  display: flex;
+}
+.tarifa-loading-screen.tarifa-loading-screen-success{
+  background: #fff;
+}
+.tarifa-loading-screen circle{
+  stroke: #ff535a;
+}
+
+.calculando-tarifa-block
+  position relative
+
+
+.cuanto-mideb.cuanto-midec
+  text-align center
+  width 220px
+
+.regular-form-el001
+  padding-bottom 10px
+
+.ep-form-package div input[type=checkbox]
+  width: auto;
+  margin-bottom: auto;
+  margin-right: 4px;
+  display: inline-block;
+
+
+.white-bgb .denocontarconseguro
+  position: absolute;
+  left: 18px;
+  padding: 0;
+  color: gray;
+  bottom: 6px;
+
+.white-bgb
+  position relative
+
+
+.calculando-tarifa-block .input-group.input-group--selection-controls label
+  white-space: normal;
+  overflow: visible;
+  cursor: pointer;
+  position: absolute;
+  left: 32px;
+  line-height: 1.2;
+  font-size: 12px;
+  color: #000;
+
+.calculando-tarifa-block .input-group__details
+    display none
+
+.tarifaNotice
+  color #ff535a
